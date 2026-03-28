@@ -1,0 +1,127 @@
+\documentclass[a4paper, 11pt]{article}
+
+% \newenvironment{ltable}
+%   {\begin{landscape}}
+%   {\end{landscape}}
+% \DeclareDelayedFloatFlavour{ltable}{table}
+
+% \usepackage{pdflscape}
+
+\usepackage{subcaption}
+\captionsetup[sub]{font=footnotesize, labelfont={bf,sf}} % 8pt for subcaptions
+
+%% AMS mathematics packages - they contain many useful fonts and symbols.
+\usepackage{amsmath, amsfonts, amssymb, amsthm, mathtools}
+\usepackage{float}
+% \floatplacement{figure}{H}
+% \floatplacement{table}{H}
+
+\usepackage{graphicx}
+
+\usepackage{bbm}
+\usepackage{physics}
+
+\usepackage{setspace}
+\usepackage{natbib}
+\usepackage{tabularx}
+
+\usepackage{tabularray}
+\usepackage{codehigh}
+\usepackage[normalem]{ulem}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+
+\usepackage[paper=a4paper, left=2.54cm, right=2.54cm, top=2.54cm, bottom=2.54cm]{geometry}
+
+\usepackage{url}
+\sloppy
+\def\UrlBreaks{\do\/\do-}
+\usepackage[breaklinks]{hyperref}
+\usepackage{breakurl}
+
+% \usepackage{newtxtext} % Use Times Roman font
+% \usepackage{newtxmath} % Use Times Roman font
+\usepackage[T1]{fontenc}
+\usepackage{newpxtext, newpxmath}
+
+\usepackage[ipa]{luatexja-preset}
+
+\newcommand{\E}{\mathbb{E}}
+
+\begin{document}
+\begin{titlepage}
+\title{TITLE\thanks{COMMENTS. All remaining errors are my own.}}
+\author{Candidate Number: 61980}
+\date{XX May 2026 \vskip \baselineskip Word Count: XXXX}
+\maketitle
+\begin{abstract}
+\noindent The empirical literature has documented a significant proportion of temporary layoff workers in the US labour market and their systematic differences to other unemployed workers.
+Temporary layoff workers are the unemployed with a specific return date to their last firm or at least an indication to be recalled within six months, unlike the other types of unemployment. Individual differences of those two types of unemployed workers are explored using longitudinally linked Current Population Survey data.
+Furthermore, I focus on the heterogeneity within temporary layoff workers that some look for an alternative job while the others do not.
+I find temporary layoff workers' decisions to search a new job are related to their job-finding rates and individual attributes, calling for a need to distinguish between them in analysing heterogeneous unemployment.
+Furthermore, I estimate an extended model of the labour matching function that predicts the number of new hires from vacancy counts as well as from separate levels of unemployment in different types.
+OLS estimates suggest a continuing decline in matching efficiency after the 2008 recession is partly due to a decreasing share of temporary layoff workers, but they may contain endogenous biases. \\
+\vspace{0in}\\
+\noindent\textbf{Keywords:} Temporary layoff, matching function, job-finding rate\\
+\vspace{0in}\\
+\noindent\textbf{JEL Codes:} J63, J64, E24\\
+
+\bigskip
+\end{abstract}
+\setcounter{page}{0}
+\thispagestyle{empty}
+\end{titlepage}
+\pagebreak \newpage
+
+\pagenumbering{roman}
+\tableofcontents
+\listoffigures
+\listoftables
+
+\pagebreak \newpage
+
+\pagenumbering{arabic}
+\onehalfspacing
+
+\section{Introduction}
+Intro here. TEST4
+
+
+\section{Literature}
+\subsection{Literature subsection 1}
+AAA
+
+\cite{gagliardone2025oil} explores AAA.
+
+\cite{gomellini2025inflation} explores BBB.
+
+\subsection{Estimating a Matching Function}
+BBB
+
+CCC
+
+
+% ltable
+% \begin{ltable}
+%   \input{log_reg_res.tex}
+% \end{ltable}
+
+\section{Methodology}\label{sec:methodology}
+
+
+\section{Results}
+Methodology is in Section \ref{sec:methodology}
+
+日本語
+
+
+\section{Discussion and Conclusions}
+
+% \newpage
+\bibliographystyle{econ-aea}
+\bibliography{bibliography}
+
+\end{document}
