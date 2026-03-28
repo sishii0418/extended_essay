@@ -1,0 +1,177 @@
+---
+title: "Untitled"
+author: Shunsuke Ishii
+editor:
+  render-on-save: false
+format: html
+jupyter: r
+lang: en-GB
+---
+
+::: {.hidden}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\inR}{\in \mathbb{R}}
+\newcommand{\inN}{\in \mathbb{N}}
+\newcommand{\inZ}{\in \mathbb{Z}}
+\newcommand{\inQ}{\in \mathbb{Q}}
+\renewcommand{\P}{\mathbb{P}}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\tand}{\text{ and }}
+\newcommand{\tor}{\text{ or }}
+\newcommand{\se}{\text{se}}
+\newcommand{\Var}{\text{Var}}
+
+\newcommand{\suminf}[1]{\sum_{#1=0}^\infty}
+\newcommand{\sumin}{\sum_{i=1}^n}
+:::
+
+
+```{r}
+library(tidyverse)
+library(fredr)
+library(estatapi)
+library(gridExtra)
+```
+
+
+```{r}
+FRED_API_KEY <- scan("fred_APIkey.txt", what = "character")
+fredr_set_key(FRED_API_KEY)
+
+appId <- scan("e-stat_appId.txt", what = "character")
+```
+
+
+```{r}
+# Consumer Price Indices (CPIs, HICPs), COICOP 1999: Consumer Price Index: Total for United Kingdom
+# Units: Contribution to growth rate, over 1 year, Not Seasonally Adjusted
+# Frequency: Monthly
+GBRCPALTT01CTGYM <- fredr(
+  series_id = "GBRCPALTT01CTGYM",
+  observation_start = as.Date("2010-01-01"),
+  observation_end = as.Date("2025-03-31")
+)
+
+# Crude Oil Prices: Brent - Europe
+# Units: Dollars per Barrel, Not Seasonally Adjusted
+# Frequency: Daily
+
+DCOILBRENTEU <- fredr(
+  series_id = "DCOILBRENTEU",
+  observation_start = as.Date("2010-01-01"),
+  observation_end = as.Date("2025-03-31"),
+  frequency = "m"
+)
+
+# Global price of Natural gas, EU
+# Units: U.S. Dollars per Million Metric British Thermal Unit, Not Seasonally Adjusted
+# Frequency: Monthly
+PNGASEUUSDM <- fredr(
+  series_id = "PNGASEUUSDM",
+  observation_start = as.Date("2010-01-01"),
+  observation_end = as.Date("2025-03-31"),
+  frequency = "m"
+)
+```
+
+
+```{r}
+crude_oil <- DCOILBRENTEU %>%
+  select(-realtime_start, -realtime_end, -series_id) %>%
+  rename(crude_oil_price = value)
+crude_oil_price_201809 <- crude_oil %>%
+  filter(date == as.Date("2018-09-01")) %>%
+  pull(crude_oil_price)
+crude_oil <- crude_oil %>%
+  mutate(crude_oil_price_relative = crude_oil_price / crude_oil_price_201809 * 100)
+
+natural_gas <- PNGASEUUSDM %>%
+  select(-realtime_start, -realtime_end, -series_id) %>%
+  rename(natural_gas_price = value)
+natural_gas_price_201809 <- natural_gas %>%
+  filter(date == as.Date("2018-09-01")) %>%
+  pull(natural_gas_price)
+natural_gas <- natural_gas %>%
+  mutate(natural_gas_price_relative = natural_gas_price / natural_gas_price_201809 * 100)
+```
+
+```{r}
+inner_join(crude_oil, natural_gas) %>%
+  select(-crude_oil_price, -natural_gas_price) %>%
+  pivot_longer(cols = c(crude_oil_price_relative, natural_gas_price_relative),
+         names_to = "type",
+         values_to = "price_relative") %>% filter(date >= ym(201809)) %>%
+    ggplot(aes(x = date, y = price_relative, color = type)) +
+    geom_line() +
+    labs(x = "Date", y = "Relative Price (Sep 2018 = 100)", color = "Type") +
+    scale_color_hue(name = "", labels = c("Crude Oil", "Natural Gas")) +
+    scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+    theme_minimal() -> p1
+ggsave("crude_oil_natural_gas_prices.pdf")
+```
+
+```{r}
+cpi_uk <- GBRCPALTT01CTGYM %>%
+  select(-realtime_start, -realtime_end, -series_id) %>%
+  rename(cpi_uk = value)
+```
+
+```{r}
+# estat_getMetaInfo(appId = appId, statsDataId = "0003427113")
+cpi_japan <- estat_getStatsData(
+  appId = appId,
+  statsDataId = "0003427113",
+  lang = "E",
+  cdTab = "3",
+  lvTime = "4",
+  cdTimeFrom = "20100000101",
+  cdTimeTo = "2025000303",
+  cdArea = "00000",
+  cdCat01 = "0001"
+)
+```
+
+```{r}
+cpi_japan <- cpi_japan %>%
+  mutate(date = my(Time)) %>%
+  rename(cpi_japan = value) %>%
+  select(date, cpi_japan)
+```
+
+```{r}
+# Consumer Price Indices (CPIs, HICPs), COICOP 1999: Consumer Price Index: Total for Germany
+# Units: Growth rate same period previous year, Not Seasonally Adjusted
+# Frequency: Monthly
+CPALTT01DEM659N <- fredr(
+  series_id = "CPALTT01DEM659N",
+  observation_start = as.Date("2010-01-01"),
+  observation_end = as.Date("2025-03-31")
+)
+
+cpi_de <- CPALTT01DEM659N %>%
+  select(-realtime_start, -realtime_end, -series_id) %>%
+  rename(cpi_de = value)
+```
+
+```{r}
+inner_join(cpi_uk, cpi_japan) %>%
+  inner_join(cpi_de) %>%
+  pivot_longer(cols = c(cpi_uk, cpi_japan, cpi_de),
+         names_to = "country",
+         values_to = "cpi") %>% filter(date >= ym(201809)) %>%
+    ggplot(aes(x = date, y = cpi, color = country)) +
+    geom_line() +
+    labs(x = "Date", y = "CPI Inflation", color = "country") +
+    scale_color_hue(name = "", labels = c("Germany", "Japan", "UK")) +
+    scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+    theme_minimal() -> p2
+ggsave("cpi_inflation.pdf")
+```
+
+```{r}
+grid.arrange(p1, p2, nrow = 2)
+```
