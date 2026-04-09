@@ -42,12 +42,14 @@
 \usepackage[breaklinks]{hyperref}
 \usepackage{breakurl}
 
+\usepackage[at]{easylist}
+
 % \usepackage{newtxtext} % Use Times Roman font
 % \usepackage{newtxmath} % Use Times Roman font
-\usepackage[T1]{fontenc}
+% \usepackage[T1]{fontenc}
 \usepackage{newpxtext, newpxmath}
 
-\usepackage[ipa]{luatexja-preset}
+% \usepackage[ipa]{luatexja-preset}
 
 \newcommand{\E}{\mathbb{E}}
 
@@ -58,14 +60,9 @@
 \date{XX May 2026 \vskip \baselineskip Word Count: XXXX}
 \maketitle
 \begin{abstract}
-\noindent The empirical literature has documented a significant proportion of temporary layoff workers in the US labour market and their systematic differences to other unemployed workers.
-Temporary layoff workers are the unemployed with a specific return date to their last firm or at least an indication to be recalled within six months, unlike the other types of unemployment. Individual differences of those two types of unemployed workers are explored using longitudinally linked Current Population Survey data.
-Furthermore, I focus on the heterogeneity within temporary layoff workers that some look for an alternative job while the others do not.
-I find temporary layoff workers' decisions to search a new job are related to their job-finding rates and individual attributes, calling for a need to distinguish between them in analysing heterogeneous unemployment.
-Furthermore, I estimate an extended model of the labour matching function that predicts the number of new hires from vacancy counts as well as from separate levels of unemployment in different types.
-OLS estimates suggest a continuing decline in matching efficiency after the 2008 recession is partly due to a decreasing share of temporary layoff workers, but they may contain endogenous biases. \\
+\noindent Abstract here. \\
 \vspace{0in}\\
-\noindent\textbf{Keywords:} Temporary layoff, matching function, job-finding rate\\
+\noindent\textbf{Keywords:} Keyword 1, keyword 2, keyword 3\\
 \vspace{0in}\\
 \noindent\textbf{JEL Codes:} J63, J64, E24\\
 
@@ -87,38 +84,232 @@ OLS estimates suggest a continuing decline in matching efficiency after the 2008
 \onehalfspacing
 
 \section{Introduction}
-Intro here. TEST4
+
+The energy crisis in 2022 has led to a surge in natural gas price, which has in turn caused a significant increase in inflation in the UK.
+Whereas the natural gas price shock was transitory, the inflation response was lagged and persistent: the peak of the inflation response occurred a few months later than that of the natural gas price, and the inflation rate remained elevated for a long time after the natural gas price returned to normal. \textcolor{blue}{TODO: present observations!}
+
+The standard New Keynesian model for a small open economy which imports energy as a factor of production at an exogenous price (hereafter ``the baseline model'') fails to replicate this hump-shaped and persistent response of inflation to the energy price shock.
+
+I extend the baseline model in two following ways to generate a hump-shaped and persistent inflation response to the energy price shock.
+First, I introduce production networks with an upstream industry that utilises imported energy and labour to produce intermediate goods and a downstream industry using the intermediate goods and labour to produce final goods that are consumed by households.
+There is a single labour market for both industries, where workers move freely between the two industries.
+Consequently, the wage is identical across the two industries in the equilibrium.
+An important feature of the production network is that the downstream industry is myopic in its pricing decisions (see \cite{minton2023delayed}).
+While non-myopic Calvo-pricing firms incorporate full information about the expected future marginal cost into their reset price calculations, myopic firms discount the future expected marginal cost and hence put more weight on the current marginal cost when setting their prices.
+The myopia of the downstream industry corresponds to an intuition that it is difficult, particularly for downstream firms, to perfectly foresee the future path of energy price, compared to the upstream industry. \textcolor{blue}{TODO: more details here.}
+
+Second, I introduce real wage rigidity in the labour market, which represents the friction in the labour market such as fixed contracts, negotiation costs, and separation/hiring costs.
+
+The rest of the paper is organised as follows.
+The following subsection explores the literature.
+In Section \ref{sec:model}, I describe the baseline model and its extensions, as well as calibrate the model parameters for the simulation.
+In Section \ref{sec:results_and_discussion}, I present the simulation results and evaluate them by conducting further sensitivity analysis.
+Finally, the paper concludes in Section \ref{sec:conclusion}.
+
+Observation:
+\begin{easylist}[itemize]
+  @ Hump shaped response of inflation to oil price shock.
+  @ Inflation rises after a lag, then falls with some persistence
+\end{easylist}
 
 
-\section{Literature}
-\subsection{Literature subsection 1}
-AAA
+\begin{easylist}[itemize]
+  @ Production networks
+    @@ Upstream industry: energy + labour -> intermediate goods
+    @@ Downstream industry: intermediate goods + labour -> final goods
+    @@ Myopic: can't perfectly foresee the future path of oil price, so they set prices (partly) based on current cost
+  @ Real wage rigidity
+    @@ representing the friction in the labour market, such as fixed contracts, negotiation costs, and separation/hiring costs
+  @ Sensitivity analysis
+\end{easylist}
+
+\subsection{Literature}
 
 \cite{gagliardone2025oil} explores AAA.
 
 \cite{gomellini2025inflation} explores BBB.
 
-\subsection{Estimating a Matching Function}
-BBB
+\begin{easylist}[itemize]
+  \ListProperties(Style=\color{blue})
+  @ Production networks
+  @ Real wage rigidity
+\end{easylist}
 
-CCC
+\section{The Model}\label{sec:model}
 
-
-% ltable
-% \begin{ltable}
-%   \input{log_reg_res.tex}
-% \end{ltable}
-
-\section{Methodology}\label{sec:methodology}
+\textcolor{blue}{Plan: \url{https://claude.ai/chat/72a44bc1-0451-4698-a8c1-b9c165442122}}
 
 
-\section{Results}
-Methodology is in Section \ref{sec:methodology}
+\subsection{The Baseline Model}
+10 endogenous variables and 10 equations.
 
-日本語
+Endogenous variables: $\pi_t, P_t, P_t^*, x_t, w_t, Y_t, L_t, s_t, i_t, C_t$
+\begin{align}
+  i_t   &= \phi i_{t-1} + (1-\phi)(\chi_pi \pi_t + \chi_y Y_t) & \text{Taylor rule} \\
+  C_t   &= \E_t C_{t+1} - \sigma(i_t - E_t \pi_{t+1}) & \text{Euler equation} \\
+  w_t   &= \frac{1}{\sigma}Y_t + \frac{1}{\psi}L_t & \text{Labour supply} \\
+  P_t   &= \theta P_{t-1} + (1-\theta)P_t^* & \text{Calvo pricing} \\
+  P_t^* &= \beta \theta P_{t+1}^* + (1-\beta \theta)MC_t & \text{Reset price} \\
+  x_t   &= X_t - P_t & \text{Real marginal cost} \\
+  \pi_t &= P_t - P_{t-1} & \text{Inflation} \\
+  x_t   &= w_t + \alpha s_t & \text{Real marginal cost} \\
+  Y_t   &= L_t - \alpha s_t & \text{Aggregate production function} \\
+  s_t   &= \rho s_{t-1} + \varepsilon_t & \text{Exogenous process for terms of trade}
+\end{align}
+
+\subsection{Extensions: Production Networks and Real Wage Rigidity}
+Consider a small open economy with two industrial sectors that imports a quantity $Z_t$ of energy from the rest of the world.
+Assume the economy does not produce energy domestically, and its domestic demand for energy does not affect the global energy price.
+There is also a homogenous internationally tradable good that the economy can produce and export.
+Assume without loss of generality that the domestic economy can produce $E_t$ units of this traded good using $E_t$ units of domestic labour, and the market for the traded good is perfectly competitive.
+This implies that the domestic-currency price of the traded good is equal to the nominal wage $W_t$, the nominal marginal cost of production.
+Define the unit price of energy imports in domestic currency to be $S_t$, and denote the relative price of imports to exports (i.e., the terms of trade) as $s_t = S_t / W_t$.
+The small open economy takes this terms of trade $s_t$ as given, and shocks to $s_t$ represent energy price shocks in the analysis.
+
+Assume that the terms of trade $s_t$ follows an exogenous AR(1) process.
+Let $\hat s_t$ denote the log-deviation of $s_t$ from its steady state value $\bar s$ that is normalised to one, so $\hat s_t$ follows
+\begin{equation}
+  \hat s_t = \rho \hat s_{t-1} + u_t,
+\end{equation}
+where $u_t$ is a zero-mean i.i.d. shock to the terms of trade, and $\rho$ measures the persistence of the exogenous shock.
+
+All goods are perishable, and the model does not have financial assets to be traded internationally, so net exports must be zero in the balance-of-payments equilibrium.
+Mathematically, this means $W_tE_t = S_tZ_t$, or equivalently,
+\begin{equation}
+  E_t = s_tZ_t.
+\end{equation}
+
+Apart from the production of tradable goods (which utilises $E_t$ units of labour to produce the same quantity of the tradable goods), the economy entails a production network of domestic consumption goods, which consists of upstream and downstream industries.
+Both industries use domestic labour as an input, which does not require any industry-specific skills, and the workers are completely mobile between the two industries, so that the wage is identical across the two industries in the equilibrium.
+
+In the upstream industry, there is a continuum of firms $j \in [0,1]$ that uses imported energy and domestic labour to produce differentiated intermediate goods, which will be used as inputs by the downstream industry.
+The production of the upstream industry firm $j$ is described by the following Leontief production function:
+\begin{equation}
+  Q_t(j) = \min\left\{\frac{Z_t(j)}{\alpha^U}, \frac{N^U_t(j)}{1 - \alpha^U}\right\},
+\end{equation}
+where $Q_t(j)$ denotes the output of firm $j$ in the upstream industry, $Z_t(j)$ and $N^U_t(j)$ denote the usage of energy and labour by firm $j$ as inputs, and the parameter $\alpha^U \in (0,1)$ is the share of energy in the production function.\footnote{The superscript $U$ ($D$) indicates a variable is about upstream (downstream) industry.}
+The production function is in Leontief form, which implies that there is no substitutability between energy and labour in producing the intermediate goods.
+The production cost is composed of the cost of labour and energy, whose nominal prices are $W_t$ and $S_t$, respectively.
+As the upstream industry firm minimises its production cost, energy and labour are used in the fixed proportions:
+\begin{equation}
+  Z_t(j) = \alpha^U Q_t(j), \quad N^U_t(j) = (1 - \alpha^U)Q_t(j).
+\end{equation}
+The nominal marginal cost $X^U_t$ of producing one unit of intermediate good is constant across firms in the upstream industry and is given by
+\begin{equation}
+  X^U_t = \alpha^U S_t + (1 - \alpha^U)W_t = (1 - \alpha^U + \alpha^U s_t)W_t.
+\end{equation}
+It follows that the real marginal cost $x^U_t = X^U_t / P^U_t$ is
+\begin{equation}
+  x^U_t = \left(1 - \alpha^U + \alpha^Us_t\right)\cdot\frac{W_t}{P^D_t}\cdot\frac{P^D_t}{P^U_t} = (1 - \alpha^U + \alpha^U s_t)\cdot w_t\cdot\frac{P^D_t}{P^U_t},
+\end{equation}
+where $w_t = W_t / P^D_t$ is the real wage.\footnote{The real term is measured by the price of consumption goods $P^D_t$.}
+Since $\bar s = 1$ in steady state, the parameter $\alpha^U$ can be interpreted as the steady-state energy share of the upstream industry firm's production costs.
+The basket of differentiated intermediate goods is aggregated into a composite intermediate good using a CES aggregator:
+\begin{equation}
+  M_t = \left(\int_0^1 Q_t(j)^{\frac{\eta - 1}{\eta}} dj\right)^{\frac{\eta}{\eta - 1}}
+\end{equation}
+which is supplied to the downstream industry to be used in the production of consumption goods.\footnote{$\eta$ is the elasticity of substitution within the upstream industry intermediate goods. For simplicity, the model assumes the elasticity of substitution is the same for both upstream and downstream industries. I conduct sensitivity analysis on this assumption in Section \ref{subsec:sensitivity_analysis} to show how results would change if it differs between the two industries.}
+
+In the downstream industry, there is a continuum of firms $i \in [0,1]$ that uses the composite intermediate goods produced by the upstream industry as well as domestic labour to produce differentiated final goods, which are consumed by households.
+The production of the downstream industry firm $i$ is also in Leontief form:
+\begin{equation}
+  Y_t(i) = \min\left\{\frac{M_t(i)}{\alpha^D}, \frac{N^D_t(i)}{1 - \alpha^D}\right\},
+\end{equation}
+where $Y_t(i)$ denotes the output of firm $i$ in the downstream industry, $M_t(i)$ and $N^D_t(i)$ denote the usage of intermediate goods composite and labour by firm $i$ as inputs, and the parameter $\alpha^D \in (0,1)$ is the share of intermediate goods composite in the production function.\footnote{$\alpha^D$ is the $(D, U)$-element of the input-output matrix in a more generalised production network model.}
+Similarly to the production of the upstream industry, the production cost minimisation implies that intermediate goods and labour are used in the fixed proportions:
+\begin{equation}
+  M_t(i) = \alpha^D Y_t(i), \quad N^D_t(i) = (1 - \alpha^D)Y_t(i).
+\end{equation}
+The nominal marginal cost $X^D_t$ of producing one unit of final good is
+\begin{equation}
+  X^D_t = \alpha^D P^U_t + (1 - \alpha^D)W_t,
+\end{equation}
+and the real marginal cost $x^D_t = X^D_t / P^D_t$ is
+\begin{equation}
+  x^D_t = \left(1 - \alpha^D + \alpha^D\frac{P^U_t}{W_t}\right)\frac{W_t}{P^D_t} = \left(1 - \alpha^D + \alpha^D\frac{P^U_t}{W_t}\right)w_t.
+\end{equation}
+
+Domestic households consume the CES aggregatedd basket of differentiated final goods:
+\begin{equation}
+  C_t = \left(\int_0^1 C_t(i)^{\frac{\eta - 1}{\eta}} di\right)^{\frac{\eta}{\eta - 1}},
+\end{equation}
+where $C_t(i) = Y_t(i)$ holds in the equilibrium for all $i$ as the market clears.
+
+\begin{easylist}[itemize]
+\ListProperties(Style=\color{blue})
+  @ HH problem => demand for consumption goods
+  @ in a similar manner can derive the demand for intermediate goods by the downstream industry, and the demand for energy by the upstream industry
+  @ 
+  @ 
+  @ 
+\end{easylist}
 
 
-\section{Discussion and Conclusions}
+\textcolor{blue}{Model ignores changes in TFP either exogenous or endogenous by the energy price shock.}
+
+\textcolor{blue}{13 endogenous variables and 13 equations.}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Model Variables}
+\label{tab:variables}
+\begin{tabular}{llll}
+\hline
+\textcolor{blue}{Symbol} & \textcolor{blue}{Dynare} & \textcolor{blue}{Description} & \textcolor{blue}{Type} \\
+\hline
+\textcolor{blue}{$\hat{\pi}_t$}     & \textcolor{blue}{\texttt{infl}}         & \textcolor{blue}{Aggregate (downstream) CPI inflation}          & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{p}^D_t$}     & \textcolor{blue}{\texttt{cpi}}          & \textcolor{blue}{Downstream price level}                        & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{p}^{D*}_t$}  & \textcolor{blue}{\texttt{resetprice\_D}} & \textcolor{blue}{Downstream Calvo reset price}                  & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{y}_t$}       & \textcolor{blue}{\texttt{gdp}}          & \textcolor{blue}{Real GDP}                                      & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{L}_t$}       & \textcolor{blue}{\texttt{employ}}       & \textcolor{blue}{Employment}                                    & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{i}_t$}       & \textcolor{blue}{\texttt{nomint}}       & \textcolor{blue}{Nominal interest rate}                         & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{w}^r_t$}     & \textcolor{blue}{\texttt{rwage}}        & \textcolor{blue}{Real wage}                                     & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{x}^D_t$}     & \textcolor{blue}{\texttt{rmc\_D}}       & \textcolor{blue}{Downstream real marginal cost}                 & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\widehat{mc}^D_t$}& \textcolor{blue}{\texttt{nmc\_D}}       & \textcolor{blue}{Downstream nominal marginal cost}              & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{s}_t$}       & \textcolor{blue}{\texttt{tot}}          & \textcolor{blue}{Terms of trade}                                & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{p}^U_t$}     & \textcolor{blue}{\texttt{cpi\_U}}       & \textcolor{blue}{Upstream price level}                          & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{p}^{U*}_t$}  & \textcolor{blue}{\texttt{resetprice\_U}}& \textcolor{blue}{Upstream Calvo reset price}                    & \textcolor{blue}{Endogenous} \\
+\textcolor{blue}{$\hat{\pi}^U_t$}   & \textcolor{blue}{\texttt{infl\_U}}      & \textcolor{blue}{Upstream inflation}                            & \textcolor{blue}{Endogenous} \\
+\hline
+\textcolor{blue}{$u_t$}             & \textcolor{blue}{\texttt{totsh}}        & \textcolor{blue}{Energy price shock}                            & \textcolor{blue}{Exogenous}  \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{align}
+  \hat{y}_t &= \hat{L}_t - \alpha \hat{s}_t & &\text{(aggregate production function)} \\
+  \hat{x}^D_t &= \Phi_{DU}\left(\hat{p}^U_t - \hat{p}^D_t\right) + (1 - \Phi_{DU})\hat{w}^r_t & &\text{(downstream real marginal cost)} \\
+  \widehat{mc}^D_t &= \hat{x}^D_t + \hat{p}^D_t & &\text{(downstream nominal marginal cost)} \\
+  \hat{w}^r_t &= \psi_w \hat{w}^r_{t-1} + (1 - \psi_w)\left(\frac{1}{\sigma}\hat{y}_t + \frac{1}{\psi}\hat{L}_t\right) & &\text{(real wage rigidity)} \\
+  \hat{\pi}_t &= \hat{p}^D_t - \hat{p}^D_{t-1} & &\text{(aggregate CPI inflation)} \\
+  \hat{\pi}^U_t &= \hat{p}^U_t - \hat{p}^U_{t-1} & &\text{(upstream inflation)} \\
+  \hat{p}^D_t &= \theta_D \hat{p}^D_{t-1} + (1 - \theta_D)\hat{p}^{D*}_t & &\text{(downstream Calvo price level)} \\
+  \hat{p}^{D*}_t &= \beta m_f \theta_D \, E_t\!\left[\hat{p}^{D*}_{t+1}\right] + (1 - \beta m_f \theta_D)\,\widehat{mc}^D_t & &\text{(downstream reset price, myopia)} \\
+  \hat{p}^U_t &= \theta_U \hat{p}^U_{t-1} + (1 - \theta_U)\hat{p}^{U*}_t & &\text{(upstream Calvo price level)} \\
+  \hat{p}^{U*}_t &= \beta \theta_U \, E_t\!\left[\hat{p}^{U*}_{t+1}\right] + (1 - \beta \theta_U)\left(\hat{w}^n_t + \alpha\hat{s}_t\right) & &\text{(upstream reset price)} \\
+  \hat{y}_t &= E_t\!\left[\hat{y}_{t+1}\right] - \sigma\left(\hat{i}_t - E_t\!\left[\hat{\pi}_{t+1}\right]\right) & &\text{(IS equation)} \\
+  \hat{i}_t &= \phi\,\hat{i}_{t-1} + (1 - \phi)\left(\chi_\pi \hat{\pi}_t + \chi_y \hat{y}_t\right) & &\text{(Taylor rule)} \\
+  \hat{s}_t &= \rho\,\hat{s}_{t-1} + u_t & &\text{(terms of trade process)}
+\end{align}
+
+\subsection{Calibration}
+
+\section{Results and Discussion}\label{sec:results_and_discussion}
+
+\subsection{Sensitivity Analysis}\label{subsec:sensitivity_analysis}
+
+Sensitivity analysis:
+\begin{easylist}[itemize]
+\ListProperties(Style=\color{blue})
+  @ Varying the degree of real wage rigidity $\psi_w \in \{0.705\}$
+  @ upstream Calvo pricing parameter $\theta_U \in \{0.5\} + \{0, 0.3, 0.7\}$ \citep{nakamura2008five}
+  @ Downstream myopica parameter $m_f \in \{0, 0.5, 1\}$
+  @ CES rather than Leontief production function?
+  @ Values of $\alpha$'s
+\end{easylist}
+
+\section{Conclusion}\label{sec:conclusion}
 
 % \newpage
 \bibliographystyle{econ-aea}

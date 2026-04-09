@@ -29,7 +29,7 @@
 // -----------------------------------------------------------------------
 // Variables (same as baseline + rwage_flex as auxiliary)
 // -----------------------------------------------------------------------
-var infl cpi resetprice gdp employ nomint rwage rwage_flex rmc nmc tot;
+var infl cpi resetprice gdp employ nomint rwage rwage_flex rmc nmc tot nwage;
 
 varexo totsh;
 
@@ -83,6 +83,8 @@ rwage_flex = (1/intsub)*gdp + (1/frisch)*employ;
 // psi_w=0.705 -> Gagliardone-Gertler benchmark
 rwage = psi_w*rwage(-1) + (1-psi_w)*rwage_flex;
 
+nwage = rwage + cpi;
+
 end;
 
 // -----------------------------------------------------------------------
@@ -92,4 +94,4 @@ shocks;
 var totsh; stderr 100;
 end;
 
-stoch_simul(irf=24, order=1) infl gdp tot nomint rwage;
+stoch_simul(irf=24, order=1) infl gdp tot nomint rwage nwage cpi;

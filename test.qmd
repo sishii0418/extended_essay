@@ -35,6 +35,7 @@ library(tidyverse)
 library(fredr)
 library(estatapi)
 library(gridExtra)
+library(forecast)
 ```
 
 
@@ -97,6 +98,12 @@ natural_gas_price_201809 <- natural_gas %>%
   pull(natural_gas_price)
 natural_gas <- natural_gas %>%
   mutate(natural_gas_price_relative = natural_gas_price / natural_gas_price_201809 * 100)
+```
+
+```{r}
+natural_gas_arima <- auto.arima(natural_gas$natural_gas_price)
+summary(natural_gas_arima)
+pacf(natural_gas_arima$residuals)
 ```
 
 ```{r}

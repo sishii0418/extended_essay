@@ -43,3 +43,36 @@ var totsh; stderr 100;
 end;
 
 stoch_simul(irf=24,order=1) infl gdp tot nomint;
+
+// -----------------------------------------------------------------------
+// Plot: infl/tot ratio (inflation persistence relative to energy shock)
+// -----------------------------------------------------------------------
+// Extract IRFs from oo_.irfs
+infl_irf = oo_.irfs.infl_totsh;
+tot_irf  = oo_.irfs.tot_totsh;
+periods  = 1:24;
+
+% Compute ratio: how large is inflation relative to tot shock each period
+% Normalise both by their period-1 values so ratio starts at 1
+infl_norm = infl_irf / infl_irf(1);   // infl relative to its own impact
+tot_norm  = tot_irf  / tot_irf(1);    // tot relative to its own impact
+
+figure('Name', 'Inflation vs ToT: Normalised IRFs and Ratio');
+
+subplot(2,1,1);
+plot(periods, infl_norm, 'b-',  'LineWidth', 2); hold on;
+plot(periods, tot_norm,  'r--', 'LineWidth', 2);
+yline(0, 'k-');
+legend('infl (normalised)', 'tot (normalised)', 'Location', 'NorthEast');
+title('Normalised IRFs: Inflation vs Terms of Trade');
+xlabel('Months'); ylabel('Relative to period-1 value');
+
+subplot(2,1,2);
+ratio = infl_norm ./ tot_norm;
+plot(periods, ratio, 'k-', 'LineWidth', 2);
+yline(1, 'r--');   // ratio=1: infl decays at same rate as tot
+xlabel('Months'); ylabel('infl / tot (normalised)');
+title('Ratio of normalised inflation to normalised tot');
+% ratio > 1: inflation MORE persistent than tot shock
+% ratio = 1: inflation decays at exactly the same rate as tot
+% ratio < 1: inflation decays FASTER than tot
