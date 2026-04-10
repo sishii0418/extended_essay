@@ -4,8 +4,6 @@
 % Warning : this file is generated automatically by Dynare
 %           from model file (.mod)
 
-clearvars -global
-clear_persistent_variables(fileparts(which('dynare')), false)
 tic0 = tic;
 % Define global variables.
 global M_ options_ oo_ estim_params_ bayestopt_ dataset_ dataset_info estimation_info
@@ -67,9 +65,9 @@ M_.endo_names(13) = {'infl_U'};
 M_.endo_names_tex(13) = {'infl\_U'};
 M_.endo_names_long(13) = {'infl_U'};
 M_.endo_partitions = struct();
-M_.param_names = cell(13,1);
-M_.param_names_tex = cell(13,1);
-M_.param_names_long = cell(13,1);
+M_.param_names = cell(15,1);
+M_.param_names_tex = cell(15,1);
+M_.param_names_long = cell(15,1);
 M_.param_names(1) = {'alph'};
 M_.param_names_tex(1) = {'alph'};
 M_.param_names_long(1) = {'alph'};
@@ -85,35 +83,41 @@ M_.param_names_long(4) = {'theta_U'};
 M_.param_names(5) = {'alph_D'};
 M_.param_names_tex(5) = {'alph\_D'};
 M_.param_names_long(5) = {'alph_D'};
-M_.param_names(6) = {'mf'};
-M_.param_names_tex(6) = {'mf'};
-M_.param_names_long(6) = {'mf'};
-M_.param_names(7) = {'psi_w'};
-M_.param_names_tex(7) = {'psi\_w'};
-M_.param_names_long(7) = {'psi_w'};
-M_.param_names(8) = {'intsub'};
-M_.param_names_tex(8) = {'intsub'};
-M_.param_names_long(8) = {'intsub'};
-M_.param_names(9) = {'frisch'};
-M_.param_names_tex(9) = {'frisch'};
-M_.param_names_long(9) = {'frisch'};
-M_.param_names(10) = {'phi'};
-M_.param_names_tex(10) = {'phi'};
-M_.param_names_long(10) = {'phi'};
-M_.param_names(11) = {'chipi'};
-M_.param_names_tex(11) = {'chipi'};
-M_.param_names_long(11) = {'chipi'};
-M_.param_names(12) = {'chiy'};
-M_.param_names_tex(12) = {'chiy'};
-M_.param_names_long(12) = {'chiy'};
-M_.param_names(13) = {'rho'};
-M_.param_names_tex(13) = {'rho'};
-M_.param_names_long(13) = {'rho'};
+M_.param_names(6) = {'epsil'};
+M_.param_names_tex(6) = {'epsil'};
+M_.param_names_long(6) = {'epsil'};
+M_.param_names(7) = {'Phi_DU'};
+M_.param_names_tex(7) = {'Phi\_DU'};
+M_.param_names_long(7) = {'Phi_DU'};
+M_.param_names(8) = {'mf'};
+M_.param_names_tex(8) = {'mf'};
+M_.param_names_long(8) = {'mf'};
+M_.param_names(9) = {'psi_w'};
+M_.param_names_tex(9) = {'psi\_w'};
+M_.param_names_long(9) = {'psi_w'};
+M_.param_names(10) = {'intsub'};
+M_.param_names_tex(10) = {'intsub'};
+M_.param_names_long(10) = {'intsub'};
+M_.param_names(11) = {'frisch'};
+M_.param_names_tex(11) = {'frisch'};
+M_.param_names_long(11) = {'frisch'};
+M_.param_names(12) = {'phi'};
+M_.param_names_tex(12) = {'phi'};
+M_.param_names_long(12) = {'phi'};
+M_.param_names(13) = {'chipi'};
+M_.param_names_tex(13) = {'chipi'};
+M_.param_names_long(13) = {'chipi'};
+M_.param_names(14) = {'chiy'};
+M_.param_names_tex(14) = {'chiy'};
+M_.param_names_long(14) = {'chiy'};
+M_.param_names(15) = {'rho'};
+M_.param_names_tex(15) = {'rho'};
+M_.param_names_long(15) = {'rho'};
 M_.param_partitions = struct();
 M_.exo_det_nbr = 0;
 M_.exo_nbr = 1;
 M_.endo_nbr = 13;
-M_.param_nbr = 13;
+M_.param_nbr = 15;
 M_.orig_endo_nbr = 13;
 M_.aux_vars = [];
 M_.heterogeneity_aggregates = {
@@ -307,7 +311,7 @@ oo_.steady_state = zeros(13, 1);
 M_.maximum_exo_lag = 0;
 M_.maximum_exo_lead = 0;
 oo_.exo_steady_state = zeros(1, 1);
-M_.params = NaN(13, 1);
+M_.params = NaN(15, 1);
 M_.endo_trends = struct('deflator', cell(13, 1), 'log_deflator', cell(13, 1), 'growth_factor', cell(13, 1), 'log_growth_factor', cell(13, 1));
 M_.dynamic_g1_sparse_rowval = int32([5 7 12 4 13 6 9 5 12 2 3 5 7 10 7 8 1 4 11 12 1 4 11 12 2 4 10 2 3 3 8 1 10 13 2 6 9 9 10 6 11 8 11 10 13 ]);
 M_.dynamic_g1_sparse_colval = int32([2 2 6 7 10 11 11 14 14 15 15 15 15 15 16 16 17 17 17 17 18 18 19 19 20 20 20 21 21 22 22 23 23 23 24 24 24 25 25 26 27 29 30 38 40 ]);
@@ -421,30 +425,34 @@ M_.static_mcp_equations_reordering = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13;
 M_.params(1) = 0.4;
 alph = M_.params(1);
 rbar    = 2;        
-M_.params(8) = 0.5;
-intsub = M_.params(8);
-M_.params(9) = 3;
-frisch = M_.params(9);
+M_.params(10) = 0.5;
+intsub = M_.params(10);
+M_.params(11) = 3;
+frisch = M_.params(11);
 M_.params(3) = 0.9166666666666666;
 theta_D = M_.params(3);
 M_.params(4) = 0.8;
 theta_U = M_.params(4);
 M_.params(5) = 0.4;
 alph_D = M_.params(5);
-M_.params(6) = 0.25;
-mf = M_.params(6);
-M_.params(7) = 0.705;
-psi_w = M_.params(7);
-M_.params(10) = 0.9;
-phi = M_.params(10);
-M_.params(11) = 3;
-chipi = M_.params(11);
-M_.params(12) = 0.5;
-chiy = M_.params(12);
-M_.params(13) = 0.8;
-rho = M_.params(13);
+M_.params(8) = 0.25;
+mf = M_.params(8);
+M_.params(9) = 0.705;
+psi_w = M_.params(9);
+M_.params(12) = 0.9;
+phi = M_.params(12);
+M_.params(13) = 3;
+chipi = M_.params(13);
+M_.params(14) = 0.5;
+chiy = M_.params(14);
+M_.params(15) = 0.8;
+rho = M_.params(15);
 M_.params(2) = (1/(1+rbar/100))^0.08333333333333333;
 bet = M_.params(2);
+M_.params(6) = 11;
+epsil = M_.params(6);
+M_.params(7) = M_.params(5)*M_.params(6)/(M_.params(6)-1)/(M_.params(5)*M_.params(6)/(M_.params(6)-1)+1-M_.params(5));
+Phi_DU = M_.params(7);
 %
 % SHOCKS instructions
 %
@@ -497,6 +505,7 @@ end
 if exist('options_mom_', 'var') == 1
   save([M_.dname filesep 'Output' filesep 'inflation_network_realwage_fix_results.mat'], 'options_mom_', '-append');
 end
+disp('Note: 1 warning(s) encountered in the preprocessor')
 if ~isempty(lastwarn)
   disp('Note: warning(s) encountered in MATLAB/Octave code')
 end

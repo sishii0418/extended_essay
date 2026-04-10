@@ -448,7 +448,7 @@ bet = M_.params(2);
 %
 % SHOCKS instructions
 %
-M_.Sigma_e(1, 1) = (700)^2;
+M_.Sigma_e(1, 1) = (100)^2;
 options_.irf = 48;
 options_.order = 1;
 var_list_ = {'infl';'infl_U';'gdp';'tot';'nomint';'cpi_U'};

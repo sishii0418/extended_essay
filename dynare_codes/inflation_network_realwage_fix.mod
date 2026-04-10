@@ -39,6 +39,8 @@ parameters alph      // Energy share in upstream production cost
            theta_D   // Calvo prob. no adjustment: downstream
            theta_U   // Calvo prob. no adjustment: upstream
            alph_D    // Downstream upstream-input share (alpha^D in model)
+           epsil     // Elasticity of substitution across varieties (CES)
+           Phi_DU    // SS cost share of upstream goods in downstream MC
            mf        // Myopia parameter (0=complete myopia, 1=RE)
            psi_w     // Real wage rigidity (0=flexible, 1=fixed)
            intsub    // Elasticity of intertemporal substitution
@@ -64,6 +66,14 @@ chiy    = 0.5;      // Taylor GDP response, from baseline
 rho     = 0.8;      // ToT persistence, from baseline
 
 bet = (1/(1+(rbar/100)))^(1/12);  // Implied monthly discount factor
+epsil = 11;                       // CES elasticity of substitution across varieties
+                                  // => markup mu^U = epsil/(epsil-1) = 11/10 = 1.1
+
+// Phi_DU: SS cost share of upstream goods in downstream MC
+// From log-linearisation of x^D_t = (1-alph_D + alph_D * P^U/W) * w
+// where P^U/W = mu^U = epsil/(epsil-1) in steady state
+// Phi_DU = alph_D * mu^U / (1 - alph_D + alph_D * mu^U)
+Phi_DU = alph_D*(epsil/(epsil-1)) / (1 - alph_D + alph_D*(epsil/(epsil-1)));
 
 model(linear);
 
@@ -77,11 +87,12 @@ gdp = employ - alph*alph_D*tot;
 
 // --------------------------------------------------------
 // (2) Downstream marginal cost
-//     rmc_D = relative price of upstream goods * alph_D
-//             + real wage * (1 - alph_D)
-//     nmc_D = rmc_D + cpi  (= alph_D*cpi_U + (1-alph_D)*(rwage+cpi))
+//     From log-lin of x^D = (1-alph_D + alph_D*P^U/W)*w:
+//     rmc_D = Phi_DU*(cpi_U - cpi) + (1-Phi_DU)*rwage
+//     where Phi_DU = alph_D*mu^U / (1-alph_D+alph_D*mu^U)
+//     nmc_D = rmc_D + cpi
 // --------------------------------------------------------
-rmc_D = alph_D*(cpi_U - cpi) + (1-alph_D)*rwage;
+rmc_D = Phi_DU*(cpi_U - cpi) + (1-Phi_DU)*rwage;
 nmc_D = rmc_D + cpi;
 
 // --------------------------------------------------------
@@ -165,4 +176,3 @@ ylabel('Fraction of period-1 value remaining');
 title('Inflation persistence vs energy price shock decay');
 legend('Terms of trade (tot)', 'CPI inflation (infl)', 'Location', 'northeast');
 grid on;
- 

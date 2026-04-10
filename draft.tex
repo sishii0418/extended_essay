@@ -1,4 +1,4 @@
-\documentclass[a4paper, 11pt]{article}
+\documentclass[a4paper, 12pt]{article}
 
 % \newenvironment{ltable}
 %   {\begin{landscape}}
@@ -34,7 +34,7 @@
 \newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
 \NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
 
-\usepackage[paper=a4paper, left=2.54cm, right=2.54cm, top=2.54cm, bottom=2.54cm]{geometry}
+\usepackage[paper=a4paper, left=20mm, right=20mm, top=20mm, bottom=20mm]{geometry}
 
 \usepackage{url}
 \sloppy
@@ -52,6 +52,9 @@
 % \usepackage[ipa]{luatexja-preset}
 
 \newcommand{\E}{\mathbb{E}}
+\newcommand{\suminf}[1]{\sum_{#1=0}^\infty}
+\theoremstyle{definition*}
+\newtheorem*{definition*}{Definition}
 
 \begin{document}
 \begin{titlepage}
@@ -129,10 +132,12 @@ Observation:
 
 \cite{gomellini2025inflation} explores BBB.
 
+
 \begin{easylist}[itemize]
   \ListProperties(Style=\color{blue})
   @ Production networks
   @ Real wage rigidity
+  @ Oil shock \url{https://www.nber.org/papers/w13368}
 \end{easylist}
 
 \section{The Model}\label{sec:model}
@@ -154,10 +159,11 @@ Endogenous variables: $\pi_t, P_t, P_t^*, x_t, w_t, Y_t, L_t, s_t, i_t, C_t$
   \pi_t &= P_t - P_{t-1} & \text{Inflation} \\
   x_t   &= w_t + \alpha s_t & \text{Real marginal cost} \\
   Y_t   &= L_t - \alpha s_t & \text{Aggregate production function} \\
-  s_t   &= \rho s_{t-1} + \varepsilon_t & \text{Exogenous process for terms of trade}
+  s_t   &= \rho s_{t-1} + \u_t & \text{Exogenous process for terms of trade}
 \end{align}
 
 \subsection{Extensions: Production Networks and Real Wage Rigidity}
+\subsubsection{Economic Environment and Terms-of-Trade Shock}
 Consider a small open economy with two industrial sectors that imports a quantity $Z_t$ of energy from the rest of the world.
 Assume the economy does not produce energy domestically, and its domestic demand for energy does not affect the global energy price.
 There is also a homogenous internationally tradable good that the economy can produce and export.
@@ -168,17 +174,18 @@ The small open economy takes this terms of trade $s_t$ as given, and shocks to $
 
 Assume that the terms of trade $s_t$ follows an exogenous AR(1) process.
 Let $\hat s_t$ denote the log-deviation of $s_t$ from its steady state value $\bar s$ that is normalised to one, so $\hat s_t$ follows
-\begin{equation}
+\begin{equation}\label{eq:tot_process}
   \hat s_t = \rho \hat s_{t-1} + u_t,
 \end{equation}
 where $u_t$ is a zero-mean i.i.d. shock to the terms of trade, and $\rho$ measures the persistence of the exogenous shock.
 
 All goods are perishable, and the model does not have financial assets to be traded internationally, so net exports must be zero in the balance-of-payments equilibrium.
 Mathematically, this means $W_tE_t = S_tZ_t$, or equivalently,
-\begin{equation}
+\begin{equation}\label{eq:balance_of_payments}
   E_t = s_tZ_t.
 \end{equation}
 
+\subsubsection{Production Network}
 Apart from the production of tradable goods (which utilises $E_t$ units of labour to produce the same quantity of the tradable goods), the economy entails a production network of domestic consumption goods, which consists of upstream and downstream industries.
 Both industries use domestic labour as an input, which does not require any industry-specific skills, and the workers are completely mobile between the two industries, so that the wage is identical across the two industries in the equilibrium.
 
@@ -206,9 +213,9 @@ where $w_t = W_t / P^D_t$ is the real wage.\footnote{The real term is measured b
 Since $\bar s = 1$ in steady state, the parameter $\alpha^U$ can be interpreted as the steady-state energy share of the upstream industry firm's production costs.
 The basket of differentiated intermediate goods is aggregated into a composite intermediate good using a CES aggregator:
 \begin{equation}
-  M_t = \left(\int_0^1 Q_t(j)^{\frac{\eta - 1}{\eta}} dj\right)^{\frac{\eta}{\eta - 1}}
+  Q_t = \left(\int_0^1 Q_t(j)^{\frac{\varepsilon - 1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon - 1}}
 \end{equation}
-which is supplied to the downstream industry to be used in the production of consumption goods.\footnote{$\eta$ is the elasticity of substitution within the upstream industry intermediate goods. For simplicity, the model assumes the elasticity of substitution is the same for both upstream and downstream industries. I conduct sensitivity analysis on this assumption in Section \ref{subsec:sensitivity_analysis} to show how results would change if it differs between the two industries.}
+which is supplied to the downstream industry to be used in the production of consumption goods.\footnote{$\varepsilon$ is the elasticity of substitution within the upstream industry intermediate goods. For simplicity, the model assumes the elasticity of substitution is the same for both upstream and downstream industries. I conduct sensitivity analysis on this assumption in Section \ref{subsec:sensitivity_analysis} to show how results would change if it differs between the two industries.}
 
 In the downstream industry, there is a continuum of firms $i \in [0,1]$ that uses the composite intermediate goods produced by the upstream industry as well as domestic labour to produce differentiated final goods, which are consumed by households.
 The production of the downstream industry firm $i$ is also in Leontief form:
@@ -231,23 +238,178 @@ and the real marginal cost $x^D_t = X^D_t / P^D_t$ is
 
 Domestic households consume the CES aggregatedd basket of differentiated final goods:
 \begin{equation}
-  C_t = \left(\int_0^1 C_t(i)^{\frac{\eta - 1}{\eta}} di\right)^{\frac{\eta}{\eta - 1}},
+  C_t = \left(\int_0^1 C_t(i)^{\frac{\varepsilon - 1}{\varepsilon}} di\right)^{\frac{\varepsilon}{\varepsilon - 1}},
 \end{equation}
 where $C_t(i) = Y_t(i)$ holds in the equilibrium for all $i$ as the market clears.
+Solving the household's utility maximisation problem under the budget constraint yields the demand for each differentiated final good $i$: \textcolor{blue}{SHOULD I SOLVE EXPLICITLY?}
+\begin{equation}\label{eq:demand_final}
+  Y_t(i) = \left(\frac{P^D_t(i)}{P^D_t}\right)^{-\varepsilon}Y_t,
+\end{equation}
+where
+\begin{equation}
+  Y_t = \left(\int_0^1Y_t(i)^{\frac{\varepsilon - 1}{\varepsilon}} di\right)^{\frac{\varepsilon}{\varepsilon - 1}}, \quad P^D_t = \left(\int_0^1 P^D_t(i)^{1-\varepsilon} di\right)^{\frac{1}{1-\varepsilon}}.
+\end{equation}
+Similarly, solutions to the downstream industry's cost minimisation problem yield the demand for each intermediate good $j$ by the downstream industry:
+\begin{equation}\label{eq:demand_intermediate}
+  M_t(j) = \left(\frac{P^U_t(j)}{P^U_t}\right)^{-\varepsilon}M_t,
+\end{equation}
+where $M_t = \int_0^1M_t(i)di$ is the downstream industry's aggregate demand for the intermediate goods basket.
+In the equilibrium, the market for intermediate goods clears for each differentiated intermediate good $j$, so $M_t(j) = Q_t(j)$ for all $j$.
+
+Since net exports are zero and there is no investment or government expenditure in the model, aggregate output of the downstream industry $Y_t$ is equal to the real GDP, as well as aggregate consumption $C_t$ in the equilibrium.
+Since consumers only consume final goods and do not directly consume intermediate goods or energy, CPI inflation is determined solely by the price level of final goods:\footnote{For this reason, I hereafter drop the superscript $D$ to emphasise the dynamics of the entire economy, while keep it for describing the downstream industry specifically, but they are the same.}
+\begin{equation}
+  \pi_t = \pi^D_t = \frac{P^D_t - P^D_{t-1}}{P^D_{t-1}}.
+\end{equation}
+
+\subsubsection{Market Clearing and Aggregation}
+Let $Z_t$ denote the aggregate demand for energy and $N^D_t$ and $N^U_t$ denote the aggregate demand for labour by the downstream and upstream industry, respectively:
+\begin{equation}
+  Z_t = \int_0^1 Z_t(j) dj, \quad N^D_t = \int_0^1 N^D_t(i) di, \quad N^U_t = \int_0^1 N^U_t(j) dj.
+\end{equation}
+Let $L_t$ denote the total demand for labour in the economy which includes the labour demand $E_t$ of competitive firms producing tradable goods:
+\begin{equation}\label{eq:labour_demand}
+  L_t = N^D_t + N^U_t + E_t.
+\end{equation}
+By substituting the demand functions for intermediate (\ref{eq:demand_intermediate}) and final goods (\ref{eq:demand_final}), one can obtain the aggregate demands for the intermediate goods $M_t$ and labour $N^D_t$ for the downstream industry and energy $Z_t$ and labour $N^U_t$ for the upstream industry: \textcolor{blue}{MAYBE MOVE THE INTERIM DERIVATIONS TO THE APPENDIX?}
+\begin{align}
+  M_t &= \int_0^1M_t(i)di = \int_0^1\alpha^DY_t(i)di = \alpha^D\int_0^1\left(\frac{P^D_t(i)}{P^D_t}\right)^{-\varepsilon}Y_tdi \\
+      &= \alpha^D\Delta^D_tY_t \\
+  N^D_t &= \int_0^1N^D_t(i)di = \int_0^1(1 - \alpha^D)Y_t(i)di = (1 - \alpha^D)\int_0^1\left(\frac{P^D_t(i)}{P^D_t}\right)^{-\varepsilon}Y_tdi \\
+        &= (1 - \alpha^D)\Delta^D_tY_t \\
+  Z_t &= \int_0^1Z_t(j)dj = \int_0^1\alpha^UQ_t(j)dj = \alpha^U\int_0^1\left(\frac{P^U_t(j)}{P^U_t}\right)^{-\varepsilon}Q_tdj \\
+      &= \alpha^U\Delta^U_tQ_t \\
+  N^U_t &= \int_0^1N^U_t(j)dj = \int_0^1(1 - \alpha^U)Q_t(j)dj = (1 - \alpha^U)\int_0^1\left(\frac{P^U_t(j)}{P^U_t}\right)^{-\varepsilon}Q_tdj \\
+        &= (1 - \alpha^U)\Delta^U_tQ_t,
+\end{align}
+where $\Delta^D_t = \int_0^1\left(P^D_t(i) / P^D_t\right)^{-\varepsilon} di$ and $\Delta^U_t = \int_0^1\left(P^U_t(j) / P^U_t\right)^{-\varepsilon} dj$ are the usual price dispersion terms for the downstream and upstream industry, respectively.
+Substituting the balance of payments condition (\ref{eq:balance_of_payments}) into the labour demand equation (\ref{eq:labour_demand}) gives $L_t = N^D_t + N^U_t + s_tZ_t$.
+Further substituting the aggregate demands derived above yields:
+\begin{align}
+  L_t &= N^D_t + N^U_t + s_tZ_t \\
+      &= (1 - \alpha^D)\Delta^D_tY_t + (1 - \alpha^U)\Delta^U_tQ_t + s_t\alpha^U\Delta^U_tQ_t \\
+      &= (1 - \alpha^D)\Delta^D_tY_t + (1 - \alpha^U)\Delta^U_tQ_t + \alpha^Us_t\Delta^U_tQ_t \\
+      &= (1 - \alpha^D)\Delta^D_tY_t + (1 - \alpha^U + \alpha^Us_t)\Delta^U_t\alpha^D\Delta^D_tY_t \\
+      &= [1 - \alpha^D + (1 - \alpha^U + \alpha^Us_t)\alpha^D\Delta^U_t]\Delta^D_tY_t,
+\end{align}
+which can be rearranged to express the aggregate output $Y_t$ as a function of the total labour demand $L_t$ and the terms of trade $s_t$:
+\begin{equation}
+  Y_t = \frac{L_t}{[1 - \alpha^D + (1 - \alpha^U + \alpha^Us_t)\alpha^D\Delta^U_t]\Delta^D_t}.
+\end{equation}
+This implies that the economy's effective labour productivity is
+\begin{equation}
+  \frac{Y_t}{L_t} = \frac{1}{[1 - \alpha^D + (1 - \alpha^U + \alpha^Us_t)\alpha^D\Delta^U_t]\Delta^D_t},
+\end{equation}
+which declines as either or both of the industry-wise relative-price distortions $\Delta^D_t$ and $\Delta^U_t$ increase, and as the terms of trade $s_t$ depreciates (i.e., imported energy price increases in domestic currency).
+Mathematically, the relative-price distortion in final goods $\Delta^D_t$ has a larger negative effect on the economy's effective labour productivity than that in intermediate goods $\Delta^U_t$, which is intuitive because the former directly affects the price of final goods, while the latter only indirectly affects it through the cost of intermediate goods.
+When the terms of trade $s_t$ depreciates, this means that the relative price of energy imports increases compared to other traded goods, which will require more labour input to produce the tradable goods $E_t$ to maintain the balance of payments equilibrium.
+Consequently, given the fixed amount of total labour in the economy $L_t$, less labour can be allocated to the production of intermediate and final consumption goods, which is equivalent to a decline in the economy's effective labour productivity. \textcolor{blue}{WHY NEED TO EXPLAIN THIS?}
+
+\subsubsection{Households and Labour Supply}
+As per the standard New Keynesian framework, households with CRRA utility from consumption and disutility from labour supply maximise the expected discounted sum of utility subject to the budget constraint:
+\begin{align}
+  \max_{\{C_t, B_t, L_t\}_{t = 0}^\infty}\E_0\suminf{t}\beta^t\left[\frac{C_t^{1 - 1/\sigma}}{1 - 1/\sigma} - \frac{L_t^{1 + 1/\psi}}{1 + 1/\psi}\right] \\
+  \text{s.t. } P^D_tC_t + B_t = (1 + i_{t-1})B_{t-1} + W_tL_t + \Pi_t,
+\end{align}
+where $B_t$ is the holding of nominal one-period bond, $i_t$ is the nominal interest rate, and $\Pi_t$ is the nominal profit from owning firms.
+FOCs with respect to $C_t$ and $L_t$ yield the Euler equation and the labour supply equation, respectively:
+\begin{align}
+  \frac{C_t^{-1/\sigma}}{P^D_t} &= \beta(1 + i_t)\E_t\left[\frac{C_{t+1}^{-1/\sigma}}{P^D_{t+1}}\right] \label{eq:euler} \\
+  \frac{L_t^{1/\psi}}{C_t^{-1/\sigma}} &= \frac{W_t}{P^D_t} = w_t. \label{eq:labour_supply}
+\end{align}
+\textcolor{blue}{ADD INTUITION FOR EULER EQN?}
+The labour supply equation implies that the real wage $w_t$ equals the marginal rate of substitution between consumption and leisure when there is no friction in the labour market.
+The following subsection introduces real wage rigidity, which generates a wedge between the real wage and the marginal rate of substitution.
+
+\subsubsection{Real Wage Rigidity}
+I introduce real wage rigidity in the labour market, which prevents the real wage from adjusting immediately to the labour market conditions.
+Mathematically, following \cite{blanchard2007real}, I assume the actual real wage $w_t$ is a weighted average of the lagged real wage $w_{t-1}$ and the flexible real wage $\tilde w_t$:
+\begin{equation}\label{eq:real_wage_process}
+  w_t = w_{t-1}^{\psi_w}\cdot\tilde w_t^{1 - \psi_w},
+\end{equation}
+where $\psi_w \in [0, 1]$ is the parameter that governs the degree of real wage rigidity with $\psi_w = 0$ corresponding to the perfectly flexible labour market with no real wage rigidity.
+
+The real wage rigidity reflects the friction in the labour market, such as fixed contracts, negotiation costs, and separation and hiring costs.\footnote{Though out of scope of the paper, microfoundation can be provided by, for example, introducing search and matching mechanism with Nash bargaining wage negotiation as discussed by \cite{hall2005employment}.}
+
+\subsubsection{Calvo and Myopic Price Setting}
+\textcolor{blue}{MOVE THIS TO THE END OF THE SUBSECTION} % Myopic expectation operatorの説明の都合上、この先の部分は節の一番下に置いて、直後に対数線形化の節を続ける。
+Both upstream and downstream firms adjust their individual nominal prices $P^U_t(j)$ and $P^D_t(i)$ according to the Calvo pricing model with probability $\theta_U$ and $\theta_D$ of no adjustment, respectively.
+The upstream industry firms determine their reset price $P^{U*}_t$ by solving the standard expected discounted profit maximisation problem:
+\begin{equation}
+  \max_{P^{U*}_t}\E_t\suminf{\ell}(\theta^U)^\ell q_{t+\ell|t}\left[\left(\frac{P^{U*}_t}{P^U_{t+\ell}}\right)^{1 - \varepsilon} - x^U_{t+\ell}\left(\frac{P^{U*}_t}{P^U_{t+\ell}}\right)^{-\varepsilon}\right]Q_{t+\ell}
+\end{equation}
+where $q_t = Q_tP^D_{t+1}/P^D_t, q_{t+\ell|t} \equiv q_t\cdots q_{t+\ell-1}$ is the real discounted factor.\footnote{As a feature of Leontief production function, the marginal cost does not depend on the firm's own output, so the amount of produced intermediate goods $Q_{t+\ell}$ appears linearly in the objective function.}
+Take the FOC with respect to $P^{U*}_t$:
+\begin{equation}
+  \E_t \suminf{\ell} (\theta^U)^\ell q_{t+\ell|t} \left[(1-\varepsilon) \left( \frac{P^{U*}_t}{P^U_{t+\ell}} \right)^{-\varepsilon} + \varepsilon x^U_{t+\ell} \left( \frac{P^{U*}_t}{P^U_{t+\ell}} \right)^{-\varepsilon-1}\right] \frac{Q_{t+\ell}}{P^U_{t+\ell}} = 0,
+\end{equation}
+which can be arranged as
+\begin{equation}
+  P^{U*}_t = \frac{\varepsilon}{\varepsilon-1} \cdot \frac{\E_t \suminf{\ell} (\theta^U)^\ell q_{t+\ell|t} x^U_{t+\ell} (P^U_{t+\ell})^{\varepsilon} Q_{t+\ell}}{\E_t \suminf{\ell} (\theta^U)^\ell q_{t+\ell|t} (P^U_{t+\ell})^{\varepsilon-1} Q_{t+\ell}}.
+\end{equation}
+In words, the optimal reset price for the intermediate good is a markup over a weighted average of the expected future real marginal cost, where the weights are determined by the Calvo parameter $\theta^U$, the real discount factor $q_{t+\ell|t}$, and the future output $Q_{t+\ell}$. \textcolor{blue}{ADD INTUITION?}
+It follows that the upstream industry price level $P^U_t$ is a weighted average of the lagged price level $P^U_{t-1}$ and the reset price $P^{U*}_t$:
+\begin{equation}
+  P^U_t = [\theta^U P^U_{t-1} + (1 - \theta^U)P^{U*}_t]^\frac{1}{1 - \varepsilon}.
+\end{equation}
+
+The downstream industry firms also adopt the same Calvo pricing model with a parameter $\theta^D$ for the probability of no price adjustment.
+Additionally, I allow deviations from rational expectations \`a la \cite{gabaix2020behavioral} and \cite{minton2023delayed}: the downstream firms are ``myopic'' in a sense that they discount the future expected marginal cost when setting their reset price, and hence put more weight on the current marginal cost than non-myopic firms do.
+To implement myopia, I simply replace the (rational) expectation operator $\E_t[\cdot]$ in the downstream firms' reset price setting problem with a \textit{myopic expectation operator} $\tilde\E[\cdot]$ whose definition is given in the following subsection since it is defined in terms of the log-deviation of variables from steady state:
+\begin{equation}
+  \max_{P^{D*}_t} \tilde\E_t \suminf{\ell} (\theta^D)^\ell q_{t+\ell|t} \left[ \left( \frac{P^{D*}_t}{P^D_{t+\ell}} \right)^{1-\varepsilon} - x^D_{t+\ell} \left( \frac{P^{D*}_t}{P^D_{t+\ell}} \right)^{-\varepsilon} \right] \frac{Y_{t+\ell}}{P^D_{t+\ell}}.
+\end{equation}
+Except for the myopia, the FOC and the optimal reset price for the downstream industry are derived in the same way as the upstream industry.
+
+\subsubsection{Competitive Equilibrium}
+The model is closed by specifying a Taylor monetary policy rule, which I describe in the next subsection in the log-linearised form.
+Here, I formally define the competitive equilibrium of the model.
+\begin{definition*}[Competitive Equilibrium]
+A competitive equilibrium consists of prices $\{P^D_t(i), P^U_t(j), W_t, i_t\}_{t=0}^\infty$ and allocations $\{C_t, Y_t(i), Q_t(j), L_t, N^D_t(i), N^U_t(j), Z_t, E_t, B_t\}_{t=0}^\infty$ such that:
+\begin{enumerate}
+  \item Households maximise utility with respect to consumption and bond holdings (i.e., the Euler equation (\ref{eq:euler}) holds), while the real wage follows the partial adjustment process (\ref{eq:real_wage_process}), therefore employment is determined by firms' labour demand at the prevailing real wage $w_t$.
+  \item The upstream industry firms set prices optimally under Calvo with parameter $\theta^U$, whereas the downstream industry firms set prices optimally under Calvo with parameter $\theta^D$ and myopic expectations.
+  \item The labour market clears at the nominal wage $W_t$ with aggregate labour supply $L_t = N^D_t + N^U_t + E_t$.
+  \item The intermediate goods market clears in aggregate $Q_t = M_t$, where $Q_t$ is aggregate upstream output and $M_t = \alpha^D\Delta^D_tY_t$ is aggregate demand for intermediate goods composite by the downstream industry.
+  \item The consumption goods market clears: $Y_t = C_t$.
+  \item The balance of payments equilibrium holds: $E_t = s_tZ_t$.
+  \item The bond market clears: $B_t = 0$.
+  \item The terms of trade $s_t$ follows the exogenous AR(1) process (\ref{eq:tot_process}).
+\end{enumerate}
+\end{definition*}
+
+\textcolor{blue}{Model ignores changes in TFP either exogenous or endogenous by the energy price shock.}
+
+\subsection{Log-linearisation}
+In this subsection, I log-linearise the model around the steady state. Detailed derivation is provided in Appendix \ref{sec:appendix-derivation}.
+\textcolor{blue}{14 endogenous variables and 14 equations.}
+
+First, I define the myopic expectation operator $\tilde\E_t[\cdot]$ for the downstream firms's price setting problem.
+\begin{definition*}[Myopic Expectation]
+  Let $\hat v_t$ be the log-deviation of a variable $v_t$ from its steady state value $\bar v$, i.e., $\hat v_t = \log(v_t / \bar v)$.
+  The myopic expectation of $\hat v_{t+k}$ for $k \geq 0$, denoted by $\tilde\E_t[\hat v_{t+k}]$, is defined as
+  \begin{equation}
+    \tilde\E_t[\hat v_{t+k}] = m_f^k\E_t[\hat v_{t+k}],
+  \end{equation}
+  where $m_f \in [0, 1]$ is the myopia parameter with $m_f = 1$ corresponding to the rational expectation case with no myopia, while $m_f = 0$ corresponding to the fully myopic case with no foresight at all.
+\end{definition*}
+
+Second, the model requires a monetary policy rule to be closed.
+I use a standard log-linearised Taylor rule
+\begin{equation}
+  \hat i_t = \phi\hat i_{t-1} + (1 - \phi)(\chi_\pi\hat\pi_t + \chi_y\hat y_t)
+\end{equation}
+with parameters $\phi, \chi_\pi$, and $\chi_y$.
 
 \begin{easylist}[itemize]
 \ListProperties(Style=\color{blue})
-  @ HH problem => demand for consumption goods
-  @ in a similar manner can derive the demand for intermediate goods by the downstream industry, and the demand for energy by the upstream industry
+  @ inflation is monthly here, while in the code it is annually
+  @ define myopic expectation operator
   @ 
   @ 
   @ 
 \end{easylist}
 
-
-\textcolor{blue}{Model ignores changes in TFP either exogenous or endogenous by the energy price shock.}
-
-\textcolor{blue}{13 endogenous variables and 13 equations.}
 
 
 \begin{table}[htbp]
@@ -278,7 +440,7 @@ where $C_t(i) = Y_t(i)$ holds in the equilibrium for all $i$ as the market clear
 \end{table}
 
 \begin{align}
-  \hat{y}_t &= \hat{L}_t - \alpha \hat{s}_t & &\text{(aggregate production function)} \\
+  \hat{y}_t &= \hat{L}_t - \alpha^U\alpha^D \hat{s}_t & &\text{(aggregate production function)} \\
   \hat{x}^D_t &= \Phi_{DU}\left(\hat{p}^U_t - \hat{p}^D_t\right) + (1 - \Phi_{DU})\hat{w}^r_t & &\text{(downstream real marginal cost)} \\
   \widehat{mc}^D_t &= \hat{x}^D_t + \hat{p}^D_t & &\text{(downstream nominal marginal cost)} \\
   \hat{w}^r_t &= \psi_w \hat{w}^r_{t-1} + (1 - \psi_w)\left(\frac{1}{\sigma}\hat{y}_t + \frac{1}{\psi}\hat{L}_t\right) & &\text{(real wage rigidity)} \\
@@ -314,5 +476,8 @@ Sensitivity analysis:
 % \newpage
 \bibliographystyle{econ-aea}
 \bibliography{bibliography}
+
+\appendix
+\section{Appendix: Derivation of Log-linearised Equations}\label{sec:appendix-derivation}
 
 \end{document}
