@@ -202,7 +202,7 @@ As the upstream industry firm minimises its production cost, energy and labour a
   Z_t(j) = \alpha^U Q_t(j), \quad N^U_t(j) = (1 - \alpha^U)Q_t(j).
 \end{equation}
 The nominal marginal cost $X^U_t$ of producing one unit of intermediate good is constant across firms in the upstream industry and is given by
-\begin{equation}
+\begin{equation}\label{eq:nmcU}
   X^U_t = \alpha^U S_t + (1 - \alpha^U)W_t = (1 - \alpha^U + \alpha^U s_t)W_t.
 \end{equation}
 It follows that the real marginal cost $x^U_t = X^U_t / P^U_t$ is
@@ -232,7 +232,7 @@ The nominal marginal cost $X^D_t$ of producing one unit of final good is
   X^D_t = \alpha^D P^U_t + (1 - \alpha^D)W_t,
 \end{equation}
 and the real marginal cost $x^D_t = X^D_t / P^D_t$ is
-\begin{equation}
+\begin{equation}\label{eq:rmcD}
   x^D_t = \left(1 - \alpha^D + \alpha^D\frac{P^U_t}{W_t}\right)\frac{W_t}{P^D_t} = \left(1 - \alpha^D + \alpha^D\frac{P^U_t}{W_t}\right)w_t.
 \end{equation}
 
@@ -323,16 +323,15 @@ The following subsection introduces real wage rigidity, which generates a wedge 
 
 \subsubsection{Real Wage Rigidity}
 I introduce real wage rigidity in the labour market, which prevents the real wage from adjusting immediately to the labour market conditions.
-Mathematically, following \cite{blanchard2007real}, I assume the actual real wage $w_t$ is a weighted average of the lagged real wage $w_{t-1}$ and the flexible real wage $\tilde w_t$:
+Mathematically, following \cite{blanchard2007real}, I assume the actual real wage $w_t$ is a weighted geometric mean of the lagged real wage $w_{t-1}$ and the flexible real wage $w^f_t$:
 \begin{equation}\label{eq:real_wage_process}
-  w_t = w_{t-1}^{\psi_w}\cdot\tilde w_t^{1 - \psi_w},
+  w_t = w_{t-1}^{\psi_w}\cdot (w^f_t)^{1 - \psi_w},
 \end{equation}
 where $\psi_w \in [0, 1]$ is the parameter that governs the degree of real wage rigidity with $\psi_w = 0$ corresponding to the perfectly flexible labour market with no real wage rigidity.
 
 The real wage rigidity reflects the friction in the labour market, such as fixed contracts, negotiation costs, and separation and hiring costs.\footnote{Though out of scope of the paper, microfoundation can be provided by, for example, introducing search and matching mechanism with Nash bargaining wage negotiation as discussed by \cite{hall2005employment}.}
 
 \subsubsection{Calvo and Myopic Price Setting}
-\textcolor{blue}{MOVE THIS TO THE END OF THE SUBSECTION} % Myopic expectation operatorの説明の都合上、この先の部分は節の一番下に置いて、直後に対数線形化の節を続ける。
 Both upstream and downstream firms adjust their individual nominal prices $P^U_t(j)$ and $P^D_t(i)$ according to the Calvo pricing model with probability $\theta_U$ and $\theta_D$ of no adjustment, respectively.
 The upstream industry firms determine their reset price $P^{U*}_t$ by solving the standard expected discounted profit maximisation problem:
 \begin{equation}
@@ -401,61 +400,57 @@ I use a standard log-linearised Taylor rule
 \end{equation}
 with parameters $\phi, \chi_\pi$, and $\chi_y$.
 
-\begin{easylist}[itemize]
-\ListProperties(Style=\color{blue})
-  @ inflation is monthly here, while in the code it is annually
-  @ define myopic expectation operator
-  @ 
-  @ 
-  @ 
-\end{easylist}
-
-
-
-\begin{table}[htbp]
-\centering
-\caption{Model Variables}
-\label{tab:variables}
-\begin{tabular}{llll}
-\hline
-\textcolor{blue}{Symbol} & \textcolor{blue}{Dynare} & \textcolor{blue}{Description} & \textcolor{blue}{Type} \\
-\hline
-\textcolor{blue}{$\hat{\pi}_t$}     & \textcolor{blue}{\texttt{infl}}         & \textcolor{blue}{Aggregate (downstream) CPI inflation}          & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{p}^D_t$}     & \textcolor{blue}{\texttt{cpi}}          & \textcolor{blue}{Downstream price level}                        & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{p}^{D*}_t$}  & \textcolor{blue}{\texttt{resetprice\_D}} & \textcolor{blue}{Downstream Calvo reset price}                  & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{y}_t$}       & \textcolor{blue}{\texttt{gdp}}          & \textcolor{blue}{Real GDP}                                      & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{L}_t$}       & \textcolor{blue}{\texttt{employ}}       & \textcolor{blue}{Employment}                                    & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{i}_t$}       & \textcolor{blue}{\texttt{nomint}}       & \textcolor{blue}{Nominal interest rate}                         & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{w}^r_t$}     & \textcolor{blue}{\texttt{rwage}}        & \textcolor{blue}{Real wage}                                     & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{x}^D_t$}     & \textcolor{blue}{\texttt{rmc\_D}}       & \textcolor{blue}{Downstream real marginal cost}                 & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\widehat{mc}^D_t$}& \textcolor{blue}{\texttt{nmc\_D}}       & \textcolor{blue}{Downstream nominal marginal cost}              & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{s}_t$}       & \textcolor{blue}{\texttt{tot}}          & \textcolor{blue}{Terms of trade}                                & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{p}^U_t$}     & \textcolor{blue}{\texttt{cpi\_U}}       & \textcolor{blue}{Upstream price level}                          & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{p}^{U*}_t$}  & \textcolor{blue}{\texttt{resetprice\_U}}& \textcolor{blue}{Upstream Calvo reset price}                    & \textcolor{blue}{Endogenous} \\
-\textcolor{blue}{$\hat{\pi}^U_t$}   & \textcolor{blue}{\texttt{infl\_U}}      & \textcolor{blue}{Upstream inflation}                            & \textcolor{blue}{Endogenous} \\
-\hline
-\textcolor{blue}{$u_t$}             & \textcolor{blue}{\texttt{totsh}}        & \textcolor{blue}{Energy price shock}                            & \textcolor{blue}{Exogenous}  \\
-\hline
-\end{tabular}
-\end{table}
-
+Combined with the log-linearised Taylor rule and the exogenous AR(1) process for the terms of trade (\ref{eq:tot_process}), the following equations complete the log-linearisation of the model:
 \begin{align}
-  \hat{y}_t &= \hat{L}_t - \alpha^U\alpha^D \hat{s}_t & &\text{(aggregate production function)} \\
-  \hat{x}^D_t &= \Phi_{DU}\left(\hat{p}^U_t - \hat{p}^D_t\right) + (1 - \Phi_{DU})\hat{w}^r_t & &\text{(downstream real marginal cost)} \\
-  \widehat{mc}^D_t &= \hat{x}^D_t + \hat{p}^D_t & &\text{(downstream nominal marginal cost)} \\
-  \hat{w}^r_t &= \psi_w \hat{w}^r_{t-1} + (1 - \psi_w)\left(\frac{1}{\sigma}\hat{y}_t + \frac{1}{\psi}\hat{L}_t\right) & &\text{(real wage rigidity)} \\
-  \hat{\pi}_t &= \hat{p}^D_t - \hat{p}^D_{t-1} & &\text{(aggregate CPI inflation)} \\
-  \hat{\pi}^U_t &= \hat{p}^U_t - \hat{p}^U_{t-1} & &\text{(upstream inflation)} \\
-  \hat{p}^D_t &= \theta_D \hat{p}^D_{t-1} + (1 - \theta_D)\hat{p}^{D*}_t & &\text{(downstream Calvo price level)} \\
-  \hat{p}^{D*}_t &= \beta m_f \theta_D \, E_t\!\left[\hat{p}^{D*}_{t+1}\right] + (1 - \beta m_f \theta_D)\,\widehat{mc}^D_t & &\text{(downstream reset price, myopia)} \\
-  \hat{p}^U_t &= \theta_U \hat{p}^U_{t-1} + (1 - \theta_U)\hat{p}^{U*}_t & &\text{(upstream Calvo price level)} \\
-  \hat{p}^{U*}_t &= \beta \theta_U \, E_t\!\left[\hat{p}^{U*}_{t+1}\right] + (1 - \beta \theta_U)\left(\hat{w}^n_t + \alpha\hat{s}_t\right) & &\text{(upstream reset price)} \\
-  \hat{y}_t &= E_t\!\left[\hat{y}_{t+1}\right] - \sigma\left(\hat{i}_t - E_t\!\left[\hat{\pi}_{t+1}\right]\right) & &\text{(IS equation)} \\
-  \hat{i}_t &= \phi\,\hat{i}_{t-1} + (1 - \phi)\left(\chi_\pi \hat{\pi}_t + \chi_y \hat{y}_t\right) & &\text{(Taylor rule)} \\
-  \hat{s}_t &= \rho\,\hat{s}_{t-1} + u_t & &\text{(terms of trade process)}
+  \hat{y}_t &= \hat{L}_t - \alpha^U \alpha^D \hat{s}_t && \text{(aggregate production function)} \label{eq:ll_prod} \\
+  \hat{x}^D_t &= \Phi_{DU}(\hat{p}^U_t - \hat{p}^D_t) + (1-\Phi_{DU})\hat{w}_t && \text{(downstream real marginal cost)} \label{eq:ll_rmcD} \\
+  \hat{X}^D_t &= \hat{x}^D_t + \hat{p}^D_t && \text{(downstream nominal marginal cost)} \label{eq:ll_nmcD} \\
+  \hat{X}^U_t &= \alpha^U \hat{s}_t + \hat{w}_t + \hat{p}^D_t && \text{(upstream nominal marginal cost)} \label{eq:ll_nmcU} \\
+  \hat w^f_t &= \frac{1}{\sigma}\hat y_t + \frac{1}{\psi}\hat{L}_t && \text{(flexible real wage)} \label{eq:ll_flexible_wage} \\
+  \hat{w}_t &= \psi_w \hat{w}_{t-1} + (1-\psi_w)\hat w^f_t && \text{(real wage rigidity)} \label{eq:ll_rwr} \\
+  \hat{\pi}_t &= \hat{p}^D_t - \hat{p}^D_{t-1} && \text{(CPI inflation)} \label{eq:ll_infl} \\
+  \hat{p}^D_t &= \theta^D \hat{p}^D_{t-1} + (1-\theta^D)\hat{p}^{D*}_t && \text{(downstream Calvo price level)} \label{eq:ll_calvoD} \\
+  \hat{p}^{D*}_t &= \beta m_f \theta^D \E_t[\hat{p}^{D*}_{t+1}] + (1-\beta m_f \theta^D)\hat{X}^D_t && \text{(downstream reset price)} \label{eq:ll_resetD} \\
+  \hat{p}^U_t &= \theta^U \hat{p}^U_{t-1} + (1-\theta^U)\hat{p}^{U*}_t && \text{(upstream Calvo price level)} \label{eq:ll_calvoU} \\
+  \hat{p}^{U*}_t &= \beta \theta^U \E_t[\hat{p}^{U*}_{t+1}] + (1-\beta\theta^U)\hat{X}^U_t && \text{(upstream reset price)} \label{eq:ll_resetU} \\
+  \hat{y}_t &= \E_t[\hat{y}_{t+1}] - \sigma(\hat{i}_t - \E_t[\hat{\pi}_{t+1}]). && \text{(IS equation)} \label{eq:ll_IS}
 \end{align}
 
+Here, I derive the log-linearised equation for the downstream real marginal cost (\ref{eq:ll_rmcD}).
+Before log-linearisation, the downstream real marginal cost is given by
+\begin{equation}
+  x^D_t = \left(1 - \alpha^D + \alpha^D\frac{P^U_t}{W_t}\right)w_t. \tag{\ref{eq:rmcD}}
+\end{equation}
+In the steady state, the nominal marginal cost of the upstream industry is $\bar X^U = \bar W$ from (\ref{eq:nmcU}).
+Also, every firm in the upstream industry will set the optimal reset price, which is the steady state nominal marginal cost multiplied by the constant markup:
+\begin{equation}
+  \bar P^U = \mu \bar W = \frac{\varepsilon}{\varepsilon - 1} \bar W,
+\end{equation}
+where $\mu \equiv \varepsilon / (\varepsilon - 1)$ is the markup.
+It follows that the steady state real marginal cost of the downstream industry is
+\begin{equation}
+  \bar x^D = (1 - \alpha^D + \alpha^D\mu)\bar w.
+\end{equation}
+The log deviation of $P^U_t / W_t$ is $\hat P^U_t - \hat W_t$, and since $w_t = W_t / P^D_t$, $\hat W_t = \hat w_t + \hat p^D_t$.
+Therefore,
+\begin{equation}
+  \widehat{\left(\frac{P^U_t}{W_t}\right)} = \hat p^U_t - \hat w_t - \hat p^D_t.
+\end{equation}
+Log-linearising $x^D_t$ around the steady state gives
+\begin{align}
+  \hat x^D_t &= \frac{\alpha^D\cdot \bar P^U / \bar W}{1 - \alpha^D + \alpha^D\cdot \bar P^U / \bar W}(\hat p^U_t - \hat w_t - \hat p^D_t) + \hat w_t \\
+             &= \frac{\alpha^D\mu}{1 - \alpha^D + \alpha^D\mu}(\hat p^U_t - \hat w_t - \hat p^D_t) + \hat w_t &\text{since $\mu = \bar P^U / \bar W$} \\
+             &= \Phi_{DU}(\hat p^U_t - \hat w_t - \hat p^D_t) + \hat w_t, \\
+             &= \Phi_{DU}(\hat p^U_t - \hat p^D_t) + (1 - \Phi_{DU})\hat w_t,
+\end{align}
+where
+\begin{equation}
+  \Phi_{DU} = \frac{\alpha^D\mu}{1 - \alpha^D + \alpha^D\mu}.
+\end{equation}
+
 \subsection{Calibration}
+I calibrate the model based on the UK economy around the 2022 Energy Crisis.
+Period is monthly.
 
 \section{Results and Discussion}\label{sec:results_and_discussion}
 
