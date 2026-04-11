@@ -51,12 +51,12 @@ parameters alph      // Energy share in upstream production cost
            rho;      // Persistence of ToT shock
 
 // --- Calibration ---
-alph    = 0.4;     // Energy share (upstream), from baseline
+alph    = 0.375;     // Energy share (upstream), from baseline
 rbar    = 2;        // Steady-state real rate (annual %)
 intsub  = 0.5;      // EIS, from baseline
 frisch  = 3;        // Frisch elasticity, from baseline
 theta_D = 11/12;    // Downstream Calvo (= baseline theta; avg. price duration 12 months)
-theta_U = 0.8;      // Upstream Calvo (avg. price duration 2 months; sensitivity: 0.3, 0.7)
+theta_U = 0.75;      // Upstream Calvo (avg. price duration 4 months; sensitivity: 0.3, 0.7)
 alph_D  = 0.4;     // Downstream upstream-input share alpha^D (sensitivity: 0.05, 0.15)
 mf      = 0.25;      // Myopia (sensitivity: 0, 1)
 psi_w   = 0.705;    // Real wage rigidity, Gagliardone & Gertler (2025)

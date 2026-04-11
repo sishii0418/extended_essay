@@ -4,6 +4,8 @@
 % Warning : this file is generated automatically by Dynare
 %           from model file (.mod)
 
+clearvars -global
+clear_persistent_variables(fileparts(which('dynare')), false)
 tic0 = tic;
 % Define global variables.
 global M_ options_ oo_ estim_params_ bayestopt_ dataset_ dataset_info estimation_info
@@ -422,7 +424,7 @@ M_.static_g1_sparse_rowval = int32([5 11 12 2 3 7 10 7 8 1 4 12 1 4 11 12 2 4 10
 M_.static_g1_sparse_colval = int32([1 1 1 2 2 2 2 3 3 4 4 4 5 5 6 6 7 7 7 8 8 9 9 10 10 10 11 11 12 12 13 ]);
 M_.static_g1_sparse_colptr = int32([1 4 8 10 13 15 17 20 22 24 27 29 31 32 ]);
 M_.static_mcp_equations_reordering = [1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13; ];
-M_.params(1) = 0.4;
+M_.params(1) = 0.375;
 alph = M_.params(1);
 rbar    = 2;        
 M_.params(10) = 0.5;
@@ -431,7 +433,7 @@ M_.params(11) = 3;
 frisch = M_.params(11);
 M_.params(3) = 0.9166666666666666;
 theta_D = M_.params(3);
-M_.params(4) = 0.8;
+M_.params(4) = 0.75;
 theta_U = M_.params(4);
 M_.params(5) = 0.4;
 alph_D = M_.params(5);

@@ -10,6 +10,8 @@ fred_APIkey.txt
 
 gagliardone2025oil.pdf
 
+input/*
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
