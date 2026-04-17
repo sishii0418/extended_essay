@@ -1,0 +1,213 @@
+---
+title: "Untitled"
+author: Shunsuke Ishii
+editor:
+  render-on-save: false
+format: html
+jupyter: r
+lang: en-GB
+---
+
+::: {.hidden}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\inR}{\in \mathbb{R}}
+\newcommand{\inN}{\in \mathbb{N}}
+\newcommand{\inZ}{\in \mathbb{Z}}
+\newcommand{\inQ}{\in \mathbb{Q}}
+\renewcommand{\P}{\mathbb{P}}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\tand}{\text{ and }}
+\newcommand{\tor}{\text{ or }}
+\newcommand{\se}{\text{se}}
+\newcommand{\Var}{\text{Var}}
+
+\newcommand{\suminf}[1]{\sum_{#1=0}^\infty}
+\newcommand{\sumin}{\sum_{i=1}^n}
+:::
+
+
+```{r}
+library(tidyverse)
+library(ggh4x)
+library(fredr)
+```
+
+```{r}
+FRED_API_KEY <- scan("fred_APIkey.txt", what = "character")
+fredr_set_key(FRED_API_KEY)
+```
+
+
+```{r}
+# Consumer Price Indices (CPIs, HICPs), COICOP 1999: Consumer Price Index: Total for United Kingdom
+# Units: Contribution to growth rate, over 1 year, Not Seasonally Adjusted
+# Frequency: Monthly
+GBRCPALTT01CTGYM <- fredr(
+  series_id = "GBRCPALTT01CTGYM",
+  observation_start = as.Date("2010-01-01"),
+  observation_end = as.Date("2025-03-31")
+)
+
+CPGRLE01GBM659N <- fredr(
+  series_id = "CPGRLE01GBM659N",
+  observation_start = as.Date("2010-01-01"),
+  observation_end = as.Date("2025-03-31")
+)
+
+# Crude Oil Prices: Brent - Europe
+# Units: Dollars per Barrel, Not Seasonally Adjusted
+# Frequency: Daily
+DCOILBRENTEU <- fredr(
+  series_id = "DCOILBRENTEU",
+  observation_start = as.Date("2010-01-01"),
+  observation_end = as.Date("2025-03-31"),
+  frequency = "m"
+)
+
+# Global price of Natural gas, EU
+# Units: U.S. Dollars per Million Metric British Thermal Unit, Not Seasonally Adjusted
+# Frequency: Monthly
+PNGASEUUSDM <- fredr(
+  series_id = "PNGASEUUSDM",
+  observation_start = as.Date("2010-01-01"),
+  observation_end = as.Date("2025-03-31"),
+  frequency = "m"
+)
+
+# U.S. Dollars to U.K. Pound Sterling Spot Exchange Rate
+# Units: U.S. Dollars to One U.K. Pound Sterling, Not Seasonally Adjusted
+# Frequency: Daily
+DEXUSUK <- fredr(
+  series_id = "DEXUSUK",
+  observation_start = as.Date("2010-01-01"),
+  observation_end = as.Date("2025-03-31"),
+  frequency = "m"
+)
+
+```
+
+
+```{r}
+dollar_pound <- DEXUSUK %>%
+  select(-realtime_start, -realtime_end, -series_id) %>%
+  rename(exchange_rate = value)
+
+crude_oil <- DCOILBRENTEU %>%
+  select(-realtime_start, -realtime_end, -series_id) %>%
+  rename(crude_oil_price = value)
+
+natural_gas <- PNGASEUUSDM %>%
+  select(-realtime_start, -realtime_end, -series_id) %>%
+  rename(natural_gas_price = value)
+
+energy_prices <- dollar_pound %>%
+  left_join(crude_oil) %>%
+  left_join(natural_gas)
+
+energy_prices <- energy_prices %>%
+  mutate(
+    crude_oil_price_gbp = crude_oil_price / exchange_rate,
+    natural_gas_price_gbp = natural_gas_price / exchange_rate,
+  ) %>%
+  select(-exchange_rate, -crude_oil_price, -natural_gas_price)
+
+crude_oil_price_201809 <- energy_prices %>%
+  filter(date == as.Date("2018-09-01")) %>%
+  pull(crude_oil_price_gbp)
+natural_gas_price_201809 <- energy_prices %>%
+  filter(date == as.Date("2018-09-01")) %>%
+  pull(natural_gas_price_gbp)
+
+energy_prices <- energy_prices %>%
+  mutate(
+    crude_oil_price_relative = crude_oil_price_gbp / crude_oil_price_201809 * 100,
+    natural_gas_price_relative = natural_gas_price_gbp / natural_gas_price_201809 * 100
+  )
+```
+
+```{r}
+energy_prices %>%
+  pivot_longer(
+    cols = c(crude_oil_price_relative, natural_gas_price_relative),
+    names_to = "type",
+    values_to = "price_relative"
+  ) %>%
+  filter(date >= ym(201809)) %>%
+  ggplot(aes(x = date, y = price_relative, color = type)) +
+  geom_line() +
+  geom_hline(yintercept = 100, linetype = "dashed") +
+  labs(x = "Date", y = "Relative Price (Sep 2018 = 100)", color = "Type") +
+  scale_color_hue(name = "", labels = c("Crude Oil", "Natural Gas")) +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  theme_bw()
+```
+
+```{r}
+cpi <- GBRCPALTT01CTGYM %>%
+  select(-realtime_start, -realtime_end, -series_id) %>%
+  rename(cpi = value)
+
+# cpi_core <- CPGRLE01GBM659N %>%
+#   select(-realtime_start, -realtime_end, -series_id) %>%
+#   rename(cpi_core = value)
+```
+
+```{r}
+scale_factor <- 800 / 12  # left axis max / right axis max
+
+plot_data <- energy_prices %>%
+  filter(date >= ym(201809)) %>%
+  left_join(cpi)
+
+plot_data %>%
+  ggplot(aes(x = date)) +
+  geom_line(aes(y = natural_gas_price_relative, color = "Natural Gas", linetype = "Natural Gas")) +
+  geom_line(aes(y = crude_oil_price_relative, color = "Crude Oil", linetype = "Crude Oil")) +
+  geom_line(
+    aes(y = cpi * scale_factor, color = "CPI Inflation", linetype = "CPI Inflation"),
+    linewidth = 1.1
+  ) +
+  # geom_hline(yintercept = 100, linetype = "dotted", alpha = 0.5) +
+  scale_y_continuous(
+    name = "Relative Price (Sep 2018 = 100)",
+    breaks = seq(0, 800, 100),
+    sec.axis = sec_axis(~ . / scale_factor, name = "Inflation (% YoY)")
+  ) +
+  scale_color_manual(
+    name = "",
+    values = c(
+      "Natural Gas" = "#D55E00",
+      "Crude Oil" = "#0072B2",
+      "CPI Inflation" = "black"
+    )
+  ) +
+  scale_linetype_manual(
+    name = "",
+    values = c(
+      "Natural Gas" = "solid",
+      "Crude Oil" = "solid",
+      "CPI Inflation" = "dashed"
+    )
+  ) +
+  guides(
+    x = guide_axis(minor.ticks = TRUE),
+    color = guide_legend(override.aes = list(linewidth = 0.6))
+  ) +
+  scale_x_date(
+    date_breaks = "1 year",
+    minor_breaks = seq(as.Date("2019-01-01"), as.Date("2025-06-01"), by = "6 months"),
+    date_labels = "%Y"
+  ) +
+  labs(x = "Date") +
+  theme_classic() +
+  theme(legend.position = "bottom")
+ggsave("figure/energy_prices_cpi_inflation.png", width = 8, height = 6, dpi = 300)
+```
+
+# Note: Core CPI
+Core CPI inflation remained high, or even higher than CPI inflation after 2023.
+This implies second-round effects of energy price shock.

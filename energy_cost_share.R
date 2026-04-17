@@ -9,12 +9,14 @@
 #
 # ============================================================
 
+# TODO: IOT exists for pre 2017 but seems to be in a different format.
 
 library(tidyverse)
 library(readxl)    # install.packages("readxl") if needed
 
 # --- Source URLs by year ---
 urls <- list(
+  # "2016" = "https://www.ons.gov.uk/file?uri=/economy/nationalaccounts/supplyandusetables/datasets/ukinputoutputanalyticaltablesdetailed/2016/nasu1719pr.xlsx",
   "2017" = "https://www.ons.gov.uk/file?uri=/economy/nationalaccounts/supplyandusetables/datasets/ukinputoutputanalyticaltablesdetailed/2017/nasu1719pr.xlsx",
   "2018" = "https://www.ons.gov.uk/file?uri=/economy/nationalaccounts/supplyandusetables/datasets/ukinputoutputanalyticaltablesdetailed/2018/nasu1719pr.xlsx",
   "2019" = "https://www.ons.gov.uk/file?uri=/economy/nationalaccounts/supplyandusetables/datasets/ukinputoutputanalyticaltablesdetailed/2019/nasu1719pr.xlsx",

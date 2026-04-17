@@ -53,19 +53,22 @@
 
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\suminf}[1]{\sum_{#1=0}^\infty}
+
 \theoremstyle{definition*}
 \newtheorem*{definition*}{Definition}
 
+\newcommand{\cites}[1]{\citeauthor{#1}'s (\citeyear{#1})}
+
 \begin{document}
 \begin{titlepage}
-\title{TITLE\thanks{COMMENTS. All remaining errors are my own.}}
+\title{Inflation Persistence After an Energy-Price Shock: A Two-Sector New Keynesian Model with Production Networks and Real Wage Rigidity\thanks{COMMENTS. All remaining errors are my own.}}
 \author{Candidate Number: 61980}
 \date{XX May 2026 \vskip \baselineskip Word Count: XXXX}
 \maketitle
 \begin{abstract}
 \noindent Abstract here. \\
 \vspace{0in}\\
-\noindent\textbf{Keywords:} Keyword 1, keyword 2, keyword 3\\
+\noindent\textbf{Keywords:} New Keynesian model, Production network, real wage rigidity\\
 \vspace{0in}\\
 \noindent\textbf{JEL Codes:} J63, J64, E24\\
 
@@ -91,7 +94,18 @@
 The energy crisis in 2022 has led to a surge in natural gas price, which has in turn caused a significant increase in inflation in the UK.
 Whereas the natural gas price shock was transitory, the inflation response was lagged and persistent: the peak of the inflation response occurred a few months later than that of the natural gas price, and the inflation rate remained elevated for a long time after the natural gas price returned to normal. \textcolor{blue}{TODO: present observations!}
 
-The standard New Keynesian model for a small open economy which imports energy as a factor of production at an exogenous price (hereafter ``the baseline model'') fails to replicate this hump-shaped and persistent response of inflation to the energy price shock.
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=\textwidth]{figure/energy_prices_cpi_inflation.png}
+  \caption{Energy Prices and UK CPI Inflation between September 2018 and March 2025}
+  \label{fig:energy_prices_cpi_inflation}
+\end{center}
+
+\footnotesize
+\textit{Notes:} Solid lines show GBP-denominated natural gas (EU) and Brent crude oil prices indexed to September 2018 = 100 (left axis). Black dashed line shows headline CPI inflation, year-on-year (right axis). Sources: FRED (PNGASEUUSDM, DCOILBRENTEU, DEXUSUK, GBRCPALTT01CTGYM)
+\end{figure}
+
+The standard New Keynesian model for a small open economy which imports energy as a factor of production at an exogenous price (hereafter ``the baseline model''; see Appendix \ref{sec:appendix-baseline} for the log-linearised model equations) fails to replicate this hump-shaped and persistent response of inflation to the energy price shock.
 
 I extend the baseline model in two following ways to replicate a hump-shaped and persistent inflation response to the energy price shock.
 First, I introduce production networks with an upstream industry that utilises imported energy and labour to produce intermediate goods and a downstream industry using the intermediate goods and labour to produce final goods that are consumed by households.
@@ -417,7 +431,7 @@ Combined with the log-linearised Taylor rule and the exogenous AR(1) process for
   \hat{y}_t &= \E_t[\hat{y}_{t+1}] - \sigma(\hat{i}_t - \E_t[\hat{\pi}_{t+1}]). && \text{(IS equation)} \label{eq:ll_IS}
 \end{align}
 
-Here, I derive the log-linearised equation for the downstream real marginal cost (\ref{eq:ll_rmcD}).
+Here, I derive the log-linearised equation for the downstream real marginal cost (\ref{eq:ll_rmcD}) to show the derivation of the internally calibrated parameter $\Phi_{DU}$.
 Before log-linearisation, the downstream real marginal cost is given by
 \begin{equation}
   x^D_t = \left(1 - \alpha^D + \alpha^D\frac{P^U_t}{W_t}\right)w_t. \tag{\ref{eq:rmcD}}
@@ -454,6 +468,7 @@ I calibrate the model based on the UK economy around the 2022 Energy Crisis.
 The model period is monthly.
 Summary of the parameter values is presented in Table \ref{tab:parameters}.
 Here, I describe the sources and rationales of the calibration choices for each parameter.
+I provide sensitivity analysis in Section \ref{subsec:sensitivity_analysis} to show how the results change if different parameter values are chosen.
 
 First, the three parameters in the households' utility function follow the standard in the New Keynesian Literature: the discount factor $\beta$ is set to 0.9984, implied by the annual real interest rate of 2\%; elasticity of intertemporal substitution $\sigma$ is set to 0.5; and the Frisch elasticity of labour supply $\psi$ is set to 3.
 
@@ -472,49 +487,92 @@ $\Phi_{DU}$ is derived as
 which is the cost-based share of the intermediate goods in the downstream industry's real marginal cost.
 The difference to $\alpha^D$ is that the upstream industry's markup on the intermediate goods is taken into account in $\Phi_{DU}$.
 
+Calvo pricing parameters are set to be $\theta^D = 11/12$ and $\theta^U = 3/4$, which imply the average price durations of 12 months and 4 months for the downstream and upstream industry, respectively.
+A strand of literature has estimated the price durations using micro-level price data and tested the validity of the Calvo pricing model.
+Using the US data, \cite{nakamura2008five} find that the median duration of consumer price changes is 8-11 months excluding sales, while that of producer price changes for intermediate goods is 7.0 months, implying that prices for intermediate goods are more flexible than those for final consumption goods. \textcolor{blue}{ADD MORE? UK data: \cite{bunn2012examining}, \cite{bunn2012how}, \cite{zhou2019determinants}}
+% Also note:
+% - heterogeneity across sectors
+% - sales vs non-sales price changes for consumer prices
+% - seasonality
+% - covariance with inflation
+The myopia parameter for the downstream industry $m_f = 0.5$ implies that the downstream firms behaviourally discount the future expected marginal cost by 50\% when setting their reset price.
+\cite{minton2023delayed} estimate the myopia parameter for firms vis-\`a-vis shocks in oil prices and non-oil commodity prices.
+They conclude that downstream firms are almost rational ($m_f \approx 1$) with respect to oil price shocks, while almost completely myopic ($m_f \approx 0$) in case of price changes in non-oil commodities, potentially due to the difficulty in formulating forward-looking expectations on far end of supply chains.
+In my model, upstream firms produce a variety of intermediate goods using imported energy, of which downstream firms may or may not be able to easily forecast future price changes.
+Therefore, for the main result, I adopt the midpoint of the possible value range $m_f = 0.5$ and provide sensitivity analysis with other values, $m_f \in \{0, 0.25, 1\}$.
+
+Regarding the real wage rigidity parameter $\psi_w$, I adopt the monthly equivalent value $0.9^{1/3} \approx 0.965$ from the baseline calibration value (0.9 in quarterly frequency) in \cite{blanchard2007real}.
+
+The monetary policy Taylor rule equation has three parameters, for which I set as $\phi = 0.9, \chi_\pi = 3$, and $\chi_y = 0.5$ following the literature standards with Taylor principle being satisfied ($\chi_\pi > 1$). \textcolor{blue}{ADD MORE?}
+
+Finally, $\rho$ indicates the degree of persistence of the terms of trade $\hat s_t$, which follows an AR(1) process.
+I set this to $\rho = 0.8$, which implies that the size of an exogenous shock to the terms of trade decays half within 3.1 months.
 
 \begin{table}[htbp]
-  \centering
-  \caption{Model Parameter Values \textcolor{blue}{Remove source/rationale column?}}
-  \label{tab:parameters}
-  \begin{tabular}{llrl}
-    \toprule
-    Parameter & Symbol & Value & Source / Rationale \\
-    \midrule
-    \multicolumn{4}{l}{\textit{Households}} \\
-    Discount factor & $\beta$ & 0.9984 & Implied by $\bar{r} = 2\%$ annual, monthly \\
-    Elasticity of intertemporal substitution & $\sigma$ & 0.5 & Standard NK \\
-    Frisch elasticity of labour supply & $\psi$ & 3 & Standard macro estimate \\
-    \addlinespace[0.4em]
-    \multicolumn{4}{l}{\textit{Production and cost structure}} \\
-    Energy cost share (upstream) & $\alpha^U$ & 0.375 & Energy-intensive upstream sector \\
-    Intermediate input share (downstream) & $\alpha^D$ & 0.4 & $\alpha^U \alpha^D \approx$ baseline \textcolor{blue}{FIXME:}\\
-    Elasticity of substitution & $\varepsilon$ & 11 & Markup $\mu = 1.1$; standard NK \\
-    Downstream upstream-cost share & $\Phi_{DU}$ & 0.4231 & Derived: $\Phi_{DU} = \alpha^D \mu / (1 - \alpha^D + \alpha^D \mu)$ \\
-    \addlinespace[0.4em]
-    \multicolumn{4}{l}{\textit{Price setting}} \\
-    Downstream Calvo probability & $\theta^D$ & 11/12 & Avg.\ duration 12 months \\
-    Upstream Calvo probability & $\theta^U$ & 3/4 & Avg.\ duration 4 months; N\&S (2008) \\
-    Myopia parameter (downstream) & $m_f$ & 0.25 & Gabaix (2020), M\&W (2023) \\
-    \addlinespace[0.4em]
-    \multicolumn{4}{l}{\textit{Labour market}} \\
-    Real wage rigidity & $\psi_w$ & 0.705 & G\&G (2025); B\&G (2007) range \\
-    \addlinespace[0.4em]
-    \multicolumn{4}{l}{\textit{Monetary policy}} \\
-    Interest-rate smoothing & $\phi$ & 0.9 & Consistent with BoE behaviour \\
-    Inflation response & $\chi_\pi$ & 3 & Satisfies Taylor principle \\
-    Output response & $\chi_y$ & 0.5 & Standard Taylor rule \\
-    \addlinespace[0.4em]
-    \multicolumn{4}{l}{\textit{Shock process}} \\
-    Terms of trade persistence & $\rho$ & 0.8 & \\
-    \bottomrule
-  \end{tabular}
+\centering
+\caption{Model Parameter Values}
+\label{tab:parameters}
+\begin{tabular}{lcc}
+\toprule
+Parameter & Symbol & Value \\
+\midrule
+\textit{Households} \\
+Discount factor & $\beta$ & 0.9984 \\
+Elasticity of intertemporal substitution & $\sigma$ & 0.5 \\
+Frisch elasticity of labour supply & $\psi$ & 3 \\
+\midrule
+\textit{Production and cost structure} \\
+Energy cost share (upstream) & $\alpha^U$ & 0.375 \\
+Intermediate input share (downstream) & $\alpha^D$ & 0.4 \\
+Elasticity of substitution & $\varepsilon$ & 11 \\
+Downstream upstream-cost share & $\Phi_{DU}$ & 0.4231 \\
+\midrule
+\textit{Price setting} \\
+Downstream Calvo probability & $\theta^D$ & 11/12 \\
+Upstream Calvo probability & $\theta^U$ & 3/4 \\
+Myopia parameter (downstream) & $m_f$ & 0.5 \\
+\midrule
+\textit{Labour market} \\
+Real wage rigidity & $\psi_w$ & $0.9^{1/3} \approx 0.965$ \\
+\midrule
+\textit{Monetary policy} \\
+Interest-rate smoothing & $\phi$ & 0.9 \\
+Inflation response & $\chi_\pi$ & 3 \\
+Output response & $\chi_y$ & 0.5 \\
+\midrule
+\textit{Shock process} \\
+Terms of trade persistence & $\rho$ & 0.8 \\
+\bottomrule
+\end{tabular}
 \end{table}
 
 
 \textcolor{blue}{\url{https://www.ons.gov.uk/economy/nationalaccounts/supplyandusetables/datasets/ukinputoutputanalyticaltablesdetailed} UK input-output tables, potentially useful to calibrate $\alpha^U$ and $\alpha^D$.}
 
 \section{Results and Discussion}\label{sec:results_and_discussion}
+Figures \ref{fig:persistence-comparison} and \ref{fig:main-irf} display the model simulation results.
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=\textwidth]{figure/persistence_comparison.png}
+  \caption{Inflation Persistence vs Energy Price Shock Decay}
+  \label{fig:persistence-comparison}
+\end{center}
+
+\footnotesize
+\textit{Notes:} 
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=\textwidth]{figure/main_irf.png}
+  \caption{Impulse Responses of the Model to an Exogenous Terms of Trade Shock}
+  \label{fig:main-irf}
+\end{center}
+
+\footnotesize
+\textit{Notes:} 
+\end{figure}
 
 \subsection{Sensitivity Analysis}\label{subsec:sensitivity_analysis}
 
@@ -528,6 +586,8 @@ Sensitivity analysis:
   @ Values of $\alpha$'s
 \end{easylist}
 
+Policy implications?
+
 \section{Conclusion}\label{sec:conclusion}
 
 Model limitations:
@@ -536,13 +596,72 @@ Model limitations:
   @ Network structure of production and input-output linkages
 \end{easylist}
 
+\textcolor{blue}{Although the model assumes that the upstream industry firms imports energy by themselves, in reality, some firms in such industries may purchase energy from domestic energy retailers. However, in terms of price setting, it is still relevant since in data literature finds price of crude materials is almost completely flexible.}
+
 % \newpage
 \bibliographystyle{econ-aea}
 \bibliography{bibliography}
 
 \appendix
+\renewcommand{\theequation}{A.\arabic{equation}}
+\setcounter{equation}{0}
+\renewcommand{\thefigure}{A.\arabic{figure}}
+\setcounter{figure}{0}
+\renewcommand{\thetable}{A.\arabic{table}}
+\setcounter{table}{0}
+
 \section{Appendix: Derivation of Log-linearised Equations}\label{sec:appendix-derivation}
 \section{Appendix: Calculations}\label{sec:appendix-calculations}
 \textcolor{blue}{Table? and graph for estimating $\alpha^U$}
+\section{Appendix: The Baseline Model}\label{sec:appendix-baseline}
+This appendix section presents the baseline small open economy New Keynesian model, on which the paper's main model is extended.
+The baseline model is characterised by the following ten log-linearised equations:
+\begin{align}
+  \hat{y}_t &= \hat{L}_t - \alpha \hat{s}_t & &\text{(aggregate production function)} \label{eq:bl_prod} \\
+  \hat{x}_t &= \hat{w}_t + \alpha \hat{s}_t & &\text{(real marginal cost)} \label{eq:bl_rmc} \\
+  \hat{X}_t &= \hat{x}_t + \hat{P}_t & &\text{(nominal marginal cost)} \label{eq:bl_nmc} \\
+  \hat{w}_t &= \frac{1}{\sigma}\hat{y}_t + \frac{1}{\psi}\hat{L}_t & &\text{(labour supply)} \label{eq:bl_ls} \\
+  \hat{\pi}_t &= \hat{P}_t - \hat{P}_{t-1} & &\text{(inflation)} \label{eq:bl_infl} \\
+  \hat{P}_t &= \theta \hat{P}_{t-1} + (1-\theta)\hat{P}_t^* & &\text{(Calvo price level)} \label{eq:bl_calvo} \\
+  \hat{P}_t^* &= \beta\theta\mathbb{E}_t[\hat{P}_{t+1}^*] + (1-\beta\theta)\hat{X}_t & &\text{(reset price)} \label{eq:bl_reset} \\
+  \hat{y}_t &= \mathbb{E}_t[\hat{y}_{t+1}] - \sigma\bigl(\hat{i}_t - \mathbb{E}_t[\hat{\pi}_{t+1}]\bigr) & &\text{(IS equation)} \label{eq:bl_is} \\
+  \hat{i}_t &= \phi\hat{i}_{t-1} + (1-\phi)\bigl(\chi_\pi \hat{\pi}_t + \chi_y \hat{y}_t\bigr) & &\text{(Taylor rule)} \label{eq:bl_taylor} \\
+  \hat{s}_t &= \rho\hat{s}_{t-1} + u_t & &\text{(terms-of-trade shock)} \label{eq:bl_tot}
+\end{align}
+
+For calibration, the adopted parameter values are summarised in Table \ref{tab:baseline_params}.
+
+\begin{table}[htbp]
+\centering
+\caption{Baseline Model Parameter Values}
+\label{tab:baseline_params}
+\begin{tabular}{lcc}
+\toprule
+Parameter & Symbol & Value \\
+\midrule
+\textit{Households} \\
+Discount factor & $\beta$ & 0.9984 \\
+Elasticity of intertemporal substitution & $\sigma$ & 0.5 \\
+Frisch elasticity of labour supply & $\psi$ & 3 \\
+\midrule
+\textit{Production and cost structure} \\
+Energy cost share & $\alpha$ & 0.15 \\
+\midrule
+\textit{Price setting} \\
+Calvo probability & $\theta$ & 11/12 \\
+\midrule
+\textit{Monetary policy} \\
+Interest-rate smoothing & $\phi$ & 0.9 \\
+Inflation response & $\chi_\pi$ & 3 \\
+Output response & $\chi_y$ & 0.5 \\
+\midrule
+\textit{Shock process} \\
+Terms of trade persistence & $\rho$ & 0.8 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\textcolor{blue}{Just list the log linearised equations here?}
 
 \end{document}

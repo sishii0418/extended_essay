@@ -58,8 +58,8 @@ frisch  = 3;        // Frisch elasticity, from baseline
 theta_D = 11/12;    // Downstream Calvo (= baseline theta; avg. price duration 12 months)
 theta_U = 0.75;      // Upstream Calvo (avg. price duration 4 months; sensitivity: 0.3, 0.7)
 alph_D  = 0.4;     // Downstream upstream-input share alpha^D (sensitivity: 0.05, 0.15)
-mf      = 0.25;      // Myopia (sensitivity: 0, 1)
-psi_w   = 0.705;    // Real wage rigidity, Gagliardone & Gertler (2025)
+mf      = 0.5;      // Myopia (sensitivity: 0, 1)
+psi_w   = 0.9^(1/3);    // Real wage rigidity
 phi     = 0.9;      // Taylor smoothing, from baseline
 chipi   = 3;        // Taylor inflation response, from baseline
 chiy    = 0.5;      // Taylor GDP response, from baseline
@@ -96,7 +96,7 @@ rmc_D = Phi_DU*(cpi_U - cpi) + (1-Phi_DU)*rwage;
 nmc_D = rmc_D + cpi;
 
 // --------------------------------------------------------
-// (3) Real wage rigidity (Gagliardone & Gertler 2025, psi_w=0.705)
+// (3) Real wage rigidity
 //     psi_w=0: flexible wage (= baseline labour supply condition)
 //     psi_w=1: completely rigid real wage
 //     Mechanism: even after tot reverts, rwage remains depressed,
@@ -148,7 +148,7 @@ var totsh; stderr 100;
 end;
 
 // IRF horizon 48 months (= 4 years) to capture persistent dynamics
-stoch_simul(irf=48, order=1) infl infl_U gdp tot nomint cpi_U;
+stoch_simul(irf=48, order=1) infl infl_U gdp tot nomint rwage rmc_D;
 
 // --------------------------------------------------------
 // Plot persistence
