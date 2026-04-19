@@ -438,7 +438,7 @@ M_.params(5) = 0.4;
 alph_D = M_.params(5);
 M_.params(8) = 0.5;
 mf = M_.params(8);
-M_.params(9) = 0.9654893846056297;
+M_.params(9) = 0.8879040017426006;
 psi_w = M_.params(9);
 M_.params(12) = 0.9;
 phi = M_.params(12);
@@ -462,8 +462,6 @@ options_.irf = 48;
 options_.order = 1;
 var_list_ = {'tot';'rwage';'rmc_D';'infl';'gdp';'nomint'};
 [info, oo_, options_, M_] = stoch_simul(M_, options_, oo_, var_list_);
-saveas(gcf, "../figure/main_irf.png");
-save("main_results.mat", "oo_", "M_", "options_");
 
 
 oo_.time = toc(tic0);

@@ -91,7 +91,7 @@
 
 \section{Introduction}
 
-The energy crisis in 2022 has led to a surge in natural gas price, which has in turn caused a significant increase in inflation in the UK.
+The energy crisis in 2022 led to a surge in natural gas prices, which has in turn caused a significant increase in inflation in the UK.
 Whereas the natural gas price shock was transitory, the inflation response was lagged and persistent: the peak of the inflation response occurred a few months later than that of the natural gas price, and the inflation rate remained elevated for a long time after the natural gas price returned to normal. \textcolor{blue}{TODO: present observations!}
 
 \begin{figure}[htbp]
@@ -107,7 +107,7 @@ Whereas the natural gas price shock was transitory, the inflation response was l
 
 The standard New Keynesian model for a small open economy which imports energy as a factor of production at an exogenous price (hereafter ``the baseline model''; see Appendix \ref{sec:appendix-baseline} for the log-linearised model equations) fails to replicate this hump-shaped and persistent response of inflation to the energy price shock.
 
-I extend the baseline model in two following ways to replicate a hump-shaped and persistent inflation response to the energy price shock.
+I extend the baseline model in the two following ways to replicate a hump-shaped and persistent inflation response to the energy price shock. \textcolor{blue}{Intuitively WHY?}
 First, I introduce production networks with an upstream industry that utilises imported energy and labour to produce intermediate goods and a downstream industry using the intermediate goods and labour to produce final goods that are consumed by households.
 There is a single labour market for both industries, where workers move freely between the two industries.
 Consequently, the wage is identical across the two industries in the equilibrium.
@@ -118,7 +118,7 @@ The myopia of the downstream industry corresponds to the difficulty, particularl
 Second, I introduce real wage rigidity in the labour market, which represents the friction in the labour market such as fixed contracts, negotiation costs, and separation/hiring costs.
 
 The rest of the paper is organised as follows.
-The following subsection explores the literature.
+The related literature is reviewed in the following subsection.
 In Section \ref{sec:model}, I describe the baseline model and its extensions, as well as calibrate the model parameters for the simulation.
 In Section \ref{sec:results_and_discussion}, I present the simulation results and evaluate them by conducting further sensitivity analysis.
 Finally, the paper concludes in Section \ref{sec:conclusion}.
@@ -501,7 +501,8 @@ They conclude that downstream firms are almost rational ($m_f \approx 1$) with r
 In my model, upstream firms produce a variety of intermediate goods using imported energy, of which downstream firms may or may not be able to easily forecast future price changes.
 Therefore, for the main result, I adopt the midpoint of the possible value range $m_f = 0.5$ and provide sensitivity analysis with other values, $m_f \in \{0, 0.25, 1\}$.
 
-Regarding the real wage rigidity parameter $\psi_w$, I adopt the monthly equivalent value $0.9^{1/3} \approx 0.965$ from the baseline calibration value (0.9 in quarterly frequency) in \cite{blanchard2007real}.
+Regarding the real wage rigidity parameter $\psi_w$, \cite{blanchard2007real} consider two example values of 0.5 and 0.9 in their quarterly model.
+I adopt the monthly equivalent of the mean value of the two, $\psi_w = 0.7^{1/3} \approx 0.888$, which implies that the real wage adjusts by 11.2\% of the gap between the flexible real wage and the actual real wage each month.
 
 The monetary policy Taylor rule equation has three parameters, for which I set as $\phi = 0.9, \chi_\pi = 3$, and $\chi_y = 0.5$ following the literature standards with Taylor principle being satisfied ($\chi_\pi > 1$). \textcolor{blue}{ADD MORE?}
 
@@ -533,7 +534,7 @@ Upstream Calvo probability & $\theta^U$ & 3/4 \\
 Myopia parameter (downstream) & $m_f$ & 0.5 \\
 \midrule
 \textit{Labour market} \\
-Real wage rigidity & $\psi_w$ & $0.9^{1/3} \approx 0.965$ \\
+Real wage rigidity & $\psi_w$ & $0.7^{1/3} \approx 0.888$ \\
 \midrule
 \textit{Monetary policy} \\
 Interest-rate smoothing & $\phi$ & 0.9 \\
@@ -549,8 +550,10 @@ Terms of trade persistence & $\rho$ & 0.8 \\
 
 \textcolor{blue}{\url{https://www.ons.gov.uk/economy/nationalaccounts/supplyandusetables/datasets/ukinputoutputanalyticaltablesdetailed} UK input-output tables, potentially useful to calibrate $\alpha^U$ and $\alpha^D$.}
 
-\section{Results and Discussion}\label{sec:results_and_discussion}
-Figures \ref{fig:persistence-comparison} and \ref{fig:main-irf} display the model simulation results.
+\section{Simulation Results and Discussion}\label{sec:results_and_discussion}
+As a quantitative exercise, I simulate the model using the calibrated parameter values and analyse the impulse response functions (IRFs) to an exogenous shock to the terms of trade.
+In period 0, the economy is hit by an exogenous shock that raises the terms of trade $\hat s_t$ by 100\% from the steady state level, which is equivalent to a doubling of the energy price in domestic currency.
+Figures \ref{fig:persistence-comparison} and \ref{fig:main-irf} display the model simulation results.\footnote{Although the model period is monthly, the impulse responses of CPI inflation and nominal rate are shown in the annualised values.}
 
 \begin{figure}[htbp]
 \begin{center}
@@ -574,6 +577,33 @@ Figures \ref{fig:persistence-comparison} and \ref{fig:main-irf} display the mode
 \textit{Notes:} 
 \end{figure}
 
+First, Figure \ref{fig:persistence-comparison} compares the inflation persistence of the baseline model and the paper's main model after an exogenous shock to the terms of trade, which itself follows an AR(1) process with a persistence parameter $\rho = 0.8$.
+In order to compare the decay rate, rather than the absolute size, of the initial shock, on this plot I standardise the size of the period-0 shock to be 1 for both models as well as the terms of trade shock itself.
+The terms of trade $\hat s_t$ is shown in grey dot dashed line, from which one can see that half of the initial shock disappears within 3.1 months, and only 10\% of the original shock remains after 10.3 months.
+Inflation response of the baseline model is shown in black solid line, showing that the baseline model fails to replicate the inflation persistence that the UK economy experienced during the 2022 Energy Crisis, as it goes back to the steady state faster than the terms of trade shock.
+In contrast, the paper's main model, whose inflation response is shown in orange solid line, exhibits a delayed peak of inflation two months after the initial shock, and the inflation rate decreases at a much slower pace than the baseline model as well as the terms of trade shock with the half decay period of around 9 months.
+
+Next, Figure \ref{fig:main-irf} shows the IRFs of different endogenous variables in the main model, with which I describe the transmission mechanism of the energy price shock in generating the observed inflation persistence.
+First, on the top left panel, the terms of trade $\hat s_t$ is hit by an 100\% exogenous shock in period 0, which decays monthly at the rate of $\rho = 0.8$, with only 10\% of the initial shock remaining after 10 months.
+
+As they use imported energy as input, the upstream industry firms experience an increase in their marginal cost, which leads to an immediate adjustment in the upstream price level $\hat p^U_t$ as the forward-looking Calvo-pricing firms increase their prices based on their rational expectations about the future path of the terms of trade.
+The increase in the upstream price level $\hat p^U_t$ then feeds into the downstream industry firms' real marginal cost $\hat x^D_t = \Phi_{DU}(\hat p^U_t - \hat p^D_t) + (1 - \Phi_{DU})\hat w_t$, shown on the top middle panel, through the cost-based input share of the intermediate goods $\Phi_{DU} \approx 0.42$.
+With a three-month lag, the downstream real marginal cost reaches the peak of 5.0\% above the steady state level, after which it decreases gradually back to the steady state level.
+
+Real wage $\hat w_t$ rises to 0.65\% above the steady state level in the first few months.
+This is because the increase in the terms of trade $\hat s_t$ requires more labour to produce the tradable goods to maintain the balance of payments equilibrium.
+Even though the labour productivity essentially falls due to the increase in the energy price (as less labour can be allocated to the production of intermediate and consumption goods), which has a downward effect on the real wage, this effect is dominated by the upward pressure on the real wage from the increase in total employment; as more labour is needed to produce tradable goods, households move along their labour supply curve and require a higher real wage to compensate for the increased disutility of labour.
+Due to the real wage rigidity, the real wage adjusts slowly and reaches its peak with a three-month lag -- which is why, as another factor of the downstream production, the downstream real marginal cost also peaks with a three-month lag and decreases slowly afterwards.
+After the peak is reached, the real wage starts to decrease as the central bank raises the nominal interest rate $\hat i_t$ in response to the rising inflation $\hat \pi_t$, and demand falls subsequently.
+Importantly, the real wage rigidity brings the persistent effect of the terms of trade shock to both the upstream and downstream industry firms: for the upstream firms, even though the energy price decreases by 20\% each month, the real wage adjusts more slowly, which delays the adjustment of the upstream marginal cost; for the downstream firms, the real wage rigidity lags the price adjustment of both inputs of the production directly and indirectly through the upstream price level, resulting in a persistent effect on the downstream marginal cost and inflation.
+
+Myopia of the downstream firms also contributes to the inflation persistence.
+If downstream firms were rational, they would foresee that the positive deviation of the real marginal cost from the steady state level is only temporary, so that the optimal reset price would not be as high as in the myopic case, and the inflation would be less persistent.
+However, as the downstream firms are myopic with $m_f = 0.5$, they put more weight on the current real marginal cost than the rational expectation case, which makes inflation persistent even when the energy price shock itself decays relatively quickly.
+
+On the bottom right panel, the nominal interest rate $\hat i_t$ increases by up to 4.5 percentage points in response to the rising inflation according to the Taylor rule.
+However, the monetary policy tightening is not sufficient to offset the inflationary pressure from the energy price shock, but to reduce the aggregate demand.
+
 \subsection{Sensitivity Analysis}\label{subsec:sensitivity_analysis}
 
 Sensitivity analysis:
@@ -585,6 +615,17 @@ Sensitivity analysis:
   @ CES rather than Leontief production function?
   @ Values of $\alpha$'s
 \end{easylist}
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=\textwidth]{figure/sensitivity.png}
+  \caption{Sensitivity Analysis Results}
+  \label{fig:sensitivity}
+\end{center}
+
+\footnotesize
+\textit{Notes:} 
+\end{figure}
 
 Policy implications?
 
@@ -661,7 +702,60 @@ Terms of trade persistence & $\rho$ & 0.8 \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=\textwidth]{figure/baseline_irf.png}
+  \caption{Impulse Responses of the Baseline Model to an Exogenous Terms of Trade Shock}
+  \label{fig:baseline-irf}
+\end{center}
 
-\textcolor{blue}{Just list the log linearised equations here?}
+\footnotesize
+\textit{Notes:} 
+\end{figure}
+
+\section{Appendix: Impulse Responses from Sensitivity Analysis}
+\textcolor{blue}{Maybe not necessary?}
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=\textwidth]{figure/sensitivity_irf_psi_w.png}
+  \caption{Impulse Responses for Varying Real Wage Rigidity $\psi_w$}
+\end{center}
+
+\footnotesize
+\textit{Notes:} 
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=\textwidth]{figure/sensitivity_irf_mf.png}
+  \caption{Impulse Responses for Varying Myopia $m_f$}
+\end{center}
+
+\footnotesize
+\textit{Notes:} 
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=\textwidth]{figure/sensitivity_irf_theta_U.png}
+  \caption{Impulse Responses for Varying Upstream Calvo Probability $\theta^U$}
+  % \label{fig:sensitivity-mf}
+\end{center}
+
+\footnotesize
+\textit{Notes:} 
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=\textwidth]{figure/sensitivity_irf_mf_psi_w.png}
+  \caption{Impulse Responses for Different Combinations of $m_f$ and $\psi_w$}
+  % \label{fig:sensitivity-mf}
+\end{center}
+
+\footnotesize
+\textit{Notes:} 
+\end{figure}
 
 \end{document}

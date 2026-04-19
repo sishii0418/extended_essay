@@ -42,5 +42,4 @@ var totsh; stderr 100;
 
 end;
 
-stoch_simul(irf=48,order=1) infl gdp tot nomint;
-save("baseline_results.mat", "oo_", "M_", "options_");
+stoch_simul(irf=48,order=1) tot rmc rwage infl gdp nomint;

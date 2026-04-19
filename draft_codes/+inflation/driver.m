@@ -378,9 +378,8 @@ bet = M_.params(2);
 M_.Sigma_e(1, 1) = (100)^2;
 options_.irf = 48;
 options_.order = 1;
-var_list_ = {'infl';'gdp';'tot';'nomint'};
+var_list_ = {'tot';'rmc';'rwage';'infl';'gdp';'nomint'};
 [info, oo_, options_, M_] = stoch_simul(M_, options_, oo_, var_list_);
-save("baseline_results.mat", "oo_", "M_", "options_");
 
 
 oo_.time = toc(tic0);

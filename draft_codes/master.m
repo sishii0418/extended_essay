@@ -14,9 +14,12 @@ dynare inflation.mod noclearall nograph
 base = oo_.irfs;
 close all;
 
-%% ---- Run extended model ------------------------------------------------
+%% ---- Compile extended model (once) ------------------------------------
 dynare inflation_network_realwage_fix.mod noclearall nograph
-ext = oo_.irfs;
+close all;
+
+%% ---- Run extended model ------------------------------------------------
+ext = run_extended(struct());
 close all;
 
 %% ---- Save all IRF data for reuse ---------------------------------------
@@ -27,23 +30,30 @@ save('irf_data.mat', 'base', 'ext', 'T');
 %% ========================================================================
 %% FIGURE 3 — Extended model: mechanism decomposition (2×3)
 %%
-%%   Upper row (structural):   tot        rwage      rmc_D
+%%   Upper row (structural):   tot        rmc_D      rwage
 %%   Lower row (outcomes):     infl       gdp        nomint
 %% ========================================================================
 panels = { ...
-%   field        title_str                                 ylabel_str
-    'tot',       'Terms of trade ($\hat{s}_t$)',           'Log dev.'; ...
-    'rwage',     'Real wage ($\hat{w}_t$)',                'Log dev.'; ...
-    'rmc_D',     'Downstream MC ($\hat{x}^D_t$)',         'Log dev.'; ...
-    'infl',      'CPI inflation ($\hat{\pi}_t$)',          'Ann. pp'; ...
-    'gdp',       'Real GDP ($\hat{y}_t$)',                 'Log dev.'; ...
-    'nomint',    'Nominal rate ($\hat{i}_t$)',              'Ann. pp'; ...
+    'tot',       'Terms of trade ($\hat{s}_t$)',                    'Log dev.'; ...
+    'rmc_D',     'Downstream real marginal cost ($\hat{x}^D_t$)',   'Log dev.'; ...
+    'rwage',     'Real wage ($\hat{w}_t$)',                         'Log dev.'; ...
+    'infl',      'CPI inflation ($\hat{\pi}_t$)',                   'Ann. pp'; ...
+    'gdp',       'Real GDP ($\hat{y}_t$)',                          'Log dev.'; ...
+    'nomint',    'Nominal rate ($\hat{i}_t$)',                      'Ann. pp'; ...
 };
 
-fig3 = figure('Position', [80 80 1020 580]);
+fig3 = figure('Position', [80 80 1100 640]);
+margins = struct('left', 0.06, 'right', 0.03, 'top', 0.08, 'bottom', 0.10, ...
+                 'hgap', 0.08, 'vgap', 0.10);
+ncols = 3; nrows = 2;
+pw = (1 - margins.left - margins.right - (ncols-1)*margins.hgap) / ncols;
+ph = (1 - margins.top  - margins.bottom - (nrows-1)*margins.vgap) / nrows;
 
 for k = 1:6
-    subplot(2, 3, k);
+    row = ceil(k/ncols);  col = mod(k-1, ncols) + 1;
+    x = margins.left + (col-1)*(pw + margins.hgap);
+    y = 1 - margins.top - row*ph - (row-1)*margins.vgap;
+    axes('Position', [x y pw ph]);
 
     field = [panels{k,1} '_totsh'];
     irf_k = ext.(field);
@@ -57,23 +67,22 @@ for k = 1:6
     xlabel('Months', 'FontSize', 8);
     ylabel(panels{k,3}, 'FontSize', 8);
     xlim([0 T-1]);
+    yl = ylim;
+    pad = 0.08 * (yl(2) - yl(1));
+    ylim([yl(1) - pad, yl(2) + pad]);
     grid on;
     set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
 end
 
-%%sgtitle('Figure 3: Impulse responses of the extended model', ...
-%%      'FontSize', 13, 'FontWeight', 'bold');
-
-print(fig3, '../figure/main_irf', '-dpng', '-r300');
-%%print(fig3, '../figure/main_irf', '-dpdf');
+% print(fig3, '../figure/main_irf', '-dpng', '-r300');
 
 %% ========================================================================
 %% FIGURE 2 — Normalised persistence comparison
 %%
 %%   Three lines, each normalised by its period-1 value:
-%%     (1) Terms of trade        — black dashed  (shock decay)
-%%     (2) Baseline CPI infl     — grey thin      (fast decay)
-%%     (3) Extended CPI infl     — blue thick      (persistent)
+%%     (1) Terms of trade        — grey dash-dot  (shock decay)
+%%     (2) Baseline CPI infl     — black           (fast decay)
+%%     (3) Extended CPI infl     — orange           (persistent)
 %% ========================================================================
 tot_norm       = ext.tot_totsh    / ext.tot_totsh(1);
 base_infl_norm = base.infl_totsh  / base.infl_totsh(1);
@@ -83,14 +92,14 @@ fig2 = figure('Position', [80 80 750 460]);
 hold on;
 
 h1 = plot(months, tot_norm,       '-.', 'Color', [0.5 0.5 0.5], 'LineWidth', 1.5);
-h2 = plot(months, base_infl_norm, '-', 'Color', [0.0   0.447 0.698], 'LineWidth', 1.8);  % #0072B2 blue = baseline
+h2 = plot(months, base_infl_norm, '-', 'Color', [0 0 0], 'LineWidth', 1.5);  % black = baseline
 h3 = plot(months, ext_infl_norm,  '-', 'Color', [0.835 0.369 0.0],   'LineWidth', 2.2);  % #D55E00 orange = extended
 yline(0, 'Color', [0.7 0.7 0.7], 'LineWidth', 0.9);
 
 hold off;
 
 xlabel('Months after shock', 'FontSize', 11);
-ylabel('Fraction of period-1 response', 'FontSize', 11);
+ylabel('Fraction of period-0 response', 'FontSize', 11);
 %%title('Figure 2: Inflation persistence vs energy-price shock decay', ...
 %%      'FontSize', 13, 'FontWeight', 'bold');
 legend([h1 h2 h3], ...
@@ -103,11 +112,288 @@ grid on;
 set(gca, 'FontSize', 10, 'GridAlpha', 0.25);
 
 print(fig2, '../figure/persistence_comparison', '-dpng', '-r300');
-%%print(fig2, 'figure2_persistence', '-dpdf');
 
-%% ---- Done --------------------------------------------------------------
-fprintf('\n===== Saved =====\n');
-fprintf('  figure2_persistence.png  (.pdf)\n');
-fprintf('  figure3_mechanism.png    (.pdf)\n');
-fprintf('  irf_data.mat\n');
-fprintf('=================\n');
+%% ========================================================================
+%% FIGURE A1 — Baseline model: mechanism decomposition (2×3)
+%%
+%%   Upper row (structural):   tot        rmc        rwage
+%%   Lower row (outcomes):     infl       gdp        nomint
+%% ========================================================================
+panels = { ...
+    'tot',       'Terms of trade ($\hat{s}_t$)',        'Log dev.'; ...
+    'rmc',       'Real marginal cost ($\hat{x}_t$)',    'Log dev.'; ...
+    'rwage',     'Real wage ($\hat{w}_t$)',             'Log dev.'; ...
+    'infl',      'CPI inflation ($\hat{\pi}_t$)',       'Ann. pp'; ...
+    'gdp',       'Real GDP ($\hat{y}_t$)',              'Log dev.'; ...
+    'nomint',    'Nominal rate ($\hat{i}_t$)',          'Ann. pp'; ...
+};
+
+figA1 = figure('Position', [80 80 1100 640]);
+margins = struct('left', 0.06, 'right', 0.03, 'top', 0.08, 'bottom', 0.10, ...
+                 'hgap', 0.08, 'vgap', 0.10);
+ncols = 3; nrows = 2;
+pw = (1 - margins.left - margins.right - (ncols-1)*margins.hgap) / ncols;
+ph = (1 - margins.top  - margins.bottom - (nrows-1)*margins.vgap) / nrows;
+
+for k = 1:6
+    row = ceil(k/ncols);  col = mod(k-1, ncols) + 1;
+    x = margins.left + (col-1)*(pw + margins.hgap);
+    y = 1 - margins.top - row*ph - (row-1)*margins.vgap;
+    axes('Position', [x y pw ph]);
+
+    field = [panels{k,1} '_totsh'];
+    irf_k = base.(field);
+
+    plot(months, irf_k, 'k-', 'LineWidth', 1.5);
+    hold on;
+    yline(0, 'Color', [0.6 0.6 0.6], 'LineWidth', 0.9);
+    hold off;
+
+    title(panels{k,2}, 'Interpreter', 'latex', 'FontSize', 11);
+    xlabel('Months', 'FontSize', 8);
+    ylabel(panels{k,3}, 'FontSize', 8);
+    xlim([0 T-1]);
+    yl = ylim;
+    pad = 0.08 * (yl(2) - yl(1));
+    ylim([yl(1) - pad, yl(2) + pad]);
+    grid on;
+    set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
+end
+
+%print(figA1, '../figure/baseline_irf', '-dpng', '-r300');
+
+%% ========================================================================
+%% SENSITIVITY ANALYSIS — Run all variants
+%% ========================================================================
+
+% --- psi_w variants ---
+ext_pw0   = run_extended(struct('psi_w', 0));          close all;
+ext_pw09  = run_extended(struct('psi_w', 0.9^(1/3)));  close all;
+
+% --- m_f variants ---
+ext_mf0   = run_extended(struct('mf', 0));   close all;
+ext_mf1   = run_extended(struct('mf', 1));   close all;
+
+% --- theta_U variants ---
+ext_thU05  = run_extended(struct('theta_U', 0.5));    close all;
+ext_thU11  = run_extended(struct('theta_U', 11/12));  close all;
+
+
+% --- psi_w & m_f variants ---
+ext_network_only = run_extended(struct('psi_w', 0, 'mf', 1));  close all;
+
+%% ========================================================================
+%% FIGURE 4 — Sensitivity: normalised inflation decay (2×2 panels)
+%% ========================================================================
+fig4 = figure('Position', [80 80 900 800]);
+
+margins = struct('left', 0.08, 'right', 0.02, 'top', 0.03, 'bottom', 0.06, ...
+                 'hgap', 0.10, 'vgap', 0.08);
+ncols = 2; nrows = 2;
+pw = (1 - margins.left - margins.right - (ncols-1)*margins.hgap) / ncols;
+ph = (1 - margins.top  - margins.bottom - (nrows-1)*margins.vgap) / nrows;
+
+% ... (color and sens definitions unchanged) ...
+
+ax = gobjects(4, 1);
+all_data = tot_norm;
+
+for p = 1:3
+    row = ceil(p/ncols);  col = mod(p-1, ncols) + 1;
+    xp = margins.left + (col-1)*(pw + margins.hgap);
+    yp = 1 - margins.top - row*ph - (row-1)*margins.vgap;
+    ax(p) = axes('Position', [xp yp pw ph]);
+    hold on;
+    
+    main_norm = sens{p,2}.infl_totsh / sens{p,2}.infl_totsh(1);
+    low_norm  = sens{p,3}.infl_totsh / sens{p,3}.infl_totsh(1);
+    high_norm = sens{p,5}.infl_totsh / sens{p,5}.infl_totsh(1);
+    all_data = [all_data, main_norm, low_norm, high_norm];
+    
+    h0 = plot(months, tot_norm,  '-.', 'Color', c_tot,  'LineWidth', 1.3);
+    h1 = plot(months, low_norm,  '-',  'Color', c_low,  'LineWidth', 1.5);
+    h2 = plot(months, main_norm, '-',  'Color', c_main, 'LineWidth', 2.0);
+    h3 = plot(months, high_norm, '-',  'Color', c_high, 'LineWidth', 1.5);
+    yline(0, 'Color', [0.7 0.7 0.7], 'LineWidth', 0.9);
+    hold off;
+    
+    title(sens{p,1}, 'Interpreter', 'latex', 'FontSize', 12);
+    xlabel('Months after shock', 'FontSize', 9);
+    if col == 1
+        ylabel('Fraction of period-0 response', 'FontSize', 9);
+    end
+    xlim([0 T-1]);
+    legend([h0 h1 h2 h3], ...
+           '$\hat{s}_t$', sens{p,4}, sens{p,7}, sens{p,6}, ...
+           'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 7);
+    grid on;
+    set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
+end
+
+% --- Panel 4 ---
+row = 2; col = 2;
+xp = margins.left + (col-1)*(pw + margins.hgap);
+yp = 1 - margins.top - row*ph - (row-1)*margins.vgap;
+ax(4) = axes('Position', [xp yp pw ph]);
+hold on;
+
+net_only_norm  = ext_network_only.infl_totsh / ext_network_only.infl_totsh(1);
+net_myop_norm  = ext_pw0.infl_totsh          / ext_pw0.infl_totsh(1);
+main_norm      = ext.infl_totsh              / ext.infl_totsh(1);
+all_data = [all_data, net_only_norm, net_myop_norm, main_norm];
+
+h0 = plot(months, tot_norm,       '-.', 'Color', c_tot,  'LineWidth', 1.3);
+h1 = plot(months, net_only_norm,  '-',  'Color', c_pink, 'LineWidth', 1.5);
+h2 = plot(months, net_myop_norm,  '-',  'Color', c_low,  'LineWidth', 1.5);
+h3 = plot(months, main_norm,      '-',  'Color', c_main, 'LineWidth', 2.0);
+yline(0, 'Color', [0.7 0.7 0.7], 'LineWidth', 0.9);
+hold off;
+
+title('$m_f$ \& $\psi_w$', 'Interpreter', 'latex', 'FontSize', 12);
+xlabel('Months after shock', 'FontSize', 9);
+ylabel('Fraction of period-0 response', 'FontSize', 9);
+xlim([0 T-1]);
+legend([h0 h1 h2 h3], ...
+       '$\hat{s}_t$', ...
+       '$m_f=1,\;\psi_w=0$ (No myopia or RWR)', ...
+       '$m_f=0.5,\;\psi_w=0$ (Myopia, no RWR)', ...
+       '$m_f=0.5,\;\psi_w=0.7^{1/3}$ (Main)', ...
+       'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 6);
+grid on;
+set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
+
+% --- Uniform y-axis ---
+ylo = min(all_data);
+yhi = max(all_data);
+pad = 0.05 * (yhi - ylo);
+set(ax, 'YLim', [ylo - pad, yhi + pad]);
+
+%print(fig4, '../figure/sensitivity', '-dpng', '-r300');
+
+%% ========================================================================
+%% SENSITIVITY — Full 6-panel IRFs, overlaid per parameter (for inspection)
+%% ========================================================================
+panels_ext = { ...
+    'cpi_U',  'Upstream price level ($\hat{p}^U_t$)',           'Log dev.'; ...
+    'rmc_D',  'Downstream real marginal cost ($\hat{x}^D_t$)',  'Log dev.'; ...
+    'rwage',  'Real wage ($\hat{w}_t$)',                        'Log dev.'; ...
+    'infl',   'CPI inflation ($\hat{\pi}_t$)',                  'Ann. pp'; ...
+    'gdp',    'Real GDP ($\hat{y}_t$)',                         'Log dev.'; ...
+    'nomint', 'Nominal rate ($\hat{i}_t$)',                     'Ann. pp'; ...
+};
+
+% Each row: { figure_title, {irfs1, label1, color1, lw1; irfs2, ...} }
+sens_irf = { ...
+    '$\psi_w$', { ...
+        ext_pw0,  '$\psi_w = 0$',          c_low,  1.5; ...
+        ext,      '$\psi_w = 0.7^{1/3}$ (main)', c_main, 2.0; ...
+        ext_pw09, '$\psi_w = 0.9^{1/3}$',  c_high, 1.5; ...
+    }; ...
+    '$m_f$', { ...
+        ext_mf1,  '$m_f = 1$',             c_low,  1.5; ...
+        ext,      '$m_f = 0.5$ (main)',     c_main, 2.0; ...
+        ext_mf0,  '$m_f = 0$',             c_high, 1.5; ...
+    }; ...
+    '$\theta^U$', { ...
+        ext_thU05, '$\theta^U = 0.5$',     c_low,  1.5; ...
+        ext,       '$\theta^U = 3/4$ (main)', c_main, 2.0; ...
+        ext_thU11, '$\theta^U = 11/12$',   c_high, 1.5; ...
+    }; ...
+    '$m_f$ \& $\psi_w$', { ...
+        ext_network_only, '$m_f=1,\;\psi_w=0$ (No myopia or RWR)', c_pink, 1.5; ...
+        ext_pw0,          '$m_f=0.5,\;\psi_w=0$ (Myopia, no RWR)', c_low,  1.5; ...
+        ext,              '$m_f=0.5,\;\psi_w=0.7^{1/3}$ (Main)',   c_main, 2.0; ...
+    }; ...
+};
+
+for s = 1:size(sens_irf, 1)
+    figV = figure('Position', [80 80 1100 640]);
+    mg = struct('left', 0.06, 'right', 0.03, 'top', 0.08, 'bottom', 0.10, ...
+                'hgap', 0.08, 'vgap', 0.10);
+    ncols = 3; nrows = 2;
+    pw = (1 - mg.left - mg.right - (ncols-1)*mg.hgap) / ncols;
+    ph = (1 - mg.top  - mg.bottom - (nrows-1)*mg.vgap) / nrows;
+    
+    variants_s = sens_irf{s, 2};
+    nv = size(variants_s, 1);
+    
+    for k = 1:6
+        row = ceil(k/ncols);  col = mod(k-1, ncols) + 1;
+        xp = mg.left + (col-1)*(pw + mg.hgap);
+        yp = 1 - mg.top - row*ph - (row-1)*mg.vgap;
+        axes('Position', [xp yp pw ph]);
+        hold on;
+        
+        field = [panels_ext{k,1} '_totsh'];
+        hlines = gobjects(nv, 1);
+        for v = 1:nv
+            hlines(v) = plot(months, variants_s{v,1}.(field), '-', ...
+                'Color', variants_s{v,3}, 'LineWidth', variants_s{v,4});
+        end
+        yline(0, 'Color', [0.6 0.6 0.6], 'LineWidth', 0.9);
+        hold off;
+        
+        title(panels_ext{k,2}, 'Interpreter', 'latex', 'FontSize', 11);
+        xlabel('Months', 'FontSize', 8);
+        ylabel(panels_ext{k,3}, 'FontSize', 8);
+        xlim([0 T-1]);
+        yl = ylim;
+        pad = 0.08 * (yl(2) - yl(1));
+        ylim([yl(1) - pad, yl(2) + pad]);
+        grid on;
+        set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
+        
+        if k == 1
+            legend(hlines, variants_s(:,2), ...
+                   'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 7);
+        end
+    end
+    
+    %sgtitle(sens_irf{s,1}, 'Interpreter', 'latex', 'FontSize', 14);
+    
+    % labels = {'psi_w', 'mf', 'theta_U', 'mf_psi_w'};
+    % print(figV, ['../figure/sensitivity_irf_' labels{s}], '-dpng', '-r300');
+end
+
+%% ========================================================================
+%% Function run_extended(params) to execute the extended model dynare code
+%% with different parameters
+%% ========================================================================
+function irfs = run_extended(params)
+    global M_ oo_ options_
+    
+    % Default = main calibration
+    defaults = struct( ...
+        'mf',      0.5, ...
+        'psi_w',   0.7^(1/3), ...
+        'theta_U', 0.75 ...
+    );
+    
+    % Merge: user values override defaults
+    flds = fieldnames(defaults);
+    for k = 1:numel(flds)
+        if ~isfield(params, flds{k})
+            params.(flds{k}) = defaults.(flds{k});
+        end
+    end
+    
+    % Set parameters
+    flds = fieldnames(params);
+    for k = 1:numel(flds)
+        set_param_value(flds{k}, params.(flds{k}));
+    end
+    
+    % Recompute Phi_DU
+    idx_aD = strcmp(M_.param_names, 'alph_D');
+    idx_ep = strcmp(M_.param_names, 'epsil');
+    alph_D = M_.params(idx_aD);
+    epsil  = M_.params(idx_ep);
+    mu = epsil / (epsil - 1);
+    set_param_value('Phi_DU', alph_D * mu / (1 - alph_D + alph_D * mu));
+    
+    options_.irf = 48;
+    options_.order = 1;
+    var_list_ = {'tot','rwage','rmc_D','infl','gdp','nomint','cpi_U'};
+    [~, oo_, options_] = stoch_simul(M_, options_, oo_, var_list_);
+    irfs = oo_.irfs;
+end
