@@ -74,7 +74,7 @@ for k = 1:6
     set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
 end
 
-% print(fig3, '../figure/main_irf', '-dpng', '-r300');
+print(fig3, '../figure/main_irf', '-dpng', '-r300');
 
 %% ========================================================================
 %% FIGURE 2 — Normalised persistence comparison
@@ -85,7 +85,7 @@ end
 %%     (3) Extended CPI infl     — orange           (persistent)
 %% ========================================================================
 tot_norm       = ext.tot_totsh    / ext.tot_totsh(1);
-base_infl_norm = base.infl_totsh  / base.infl_totsh(1);
+base_infl_norm = base.infl_totsh  / ext.infl_totsh(1);
 ext_infl_norm  = ext.infl_totsh   / ext.infl_totsh(1);
 
 fig2 = figure('Position', [80 80 750 460]);
@@ -99,9 +99,7 @@ yline(0, 'Color', [0.7 0.7 0.7], 'LineWidth', 0.9);
 hold off;
 
 xlabel('Months after shock', 'FontSize', 11);
-ylabel('Fraction of period-0 response', 'FontSize', 11);
-%%title('Figure 2: Inflation persistence vs energy-price shock decay', ...
-%%      'FontSize', 13, 'FontWeight', 'bold');
+ylabel('Fraction of period-0 inflation response of the main model', 'FontSize', 11);
 legend([h1 h2 h3], ...
        'Terms of trade ($\hat{s}_t$)', ...
        'Baseline model CPI inflation', ...
@@ -160,7 +158,7 @@ for k = 1:6
     set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
 end
 
-%print(figA1, '../figure/baseline_irf', '-dpng', '-r300');
+print(figA1, '../figure/baseline_irf', '-dpng', '-r300');
 
 %% ========================================================================
 %% SENSITIVITY ANALYSIS — Run all variants
@@ -204,30 +202,31 @@ for p = 1:3
     yp = 1 - margins.top - row*ph - (row-1)*margins.vgap;
     ax(p) = axes('Position', [xp yp pw ph]);
     hold on;
-    
+
     main_norm = sens{p,2}.infl_totsh / sens{p,2}.infl_totsh(1);
-    low_norm  = sens{p,3}.infl_totsh / sens{p,3}.infl_totsh(1);
-    high_norm = sens{p,5}.infl_totsh / sens{p,5}.infl_totsh(1);
+    low_norm  = sens{p,3}.infl_totsh / sens{p,2}.infl_totsh(1);
+    high_norm = sens{p,5}.infl_totsh / sens{p,2}.infl_totsh(1);
     all_data = [all_data, main_norm, low_norm, high_norm];
-    
+
     h0 = plot(months, tot_norm,  '-.', 'Color', c_tot,  'LineWidth', 1.3);
     h1 = plot(months, low_norm,  '-',  'Color', c_low,  'LineWidth', 1.5);
     h2 = plot(months, main_norm, '-',  'Color', c_main, 'LineWidth', 2.0);
     h3 = plot(months, high_norm, '-',  'Color', c_high, 'LineWidth', 1.5);
     yline(0, 'Color', [0.7 0.7 0.7], 'LineWidth', 0.9);
     hold off;
-    
-    title(sens{p,1}, 'Interpreter', 'latex', 'FontSize', 12);
+
+
     xlabel('Months after shock', 'FontSize', 9);
     if col == 1
-        ylabel('Fraction of period-0 response', 'FontSize', 9);
+        ylabel('Fraction of period-0 inflation response of the main model', 'FontSize', 9);
     end
     xlim([0 T-1]);
     legend([h0 h1 h2 h3], ...
            '$\hat{s}_t$', sens{p,4}, sens{p,7}, sens{p,6}, ...
-           'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 7);
+           'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 9);
     grid on;
     set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
+    title(sens{p,1}, 'Interpreter', 'latex', 'FontSize', 14);
 end
 
 % --- Panel 4 ---
@@ -237,8 +236,8 @@ yp = 1 - margins.top - row*ph - (row-1)*margins.vgap;
 ax(4) = axes('Position', [xp yp pw ph]);
 hold on;
 
-net_only_norm  = ext_network_only.infl_totsh / ext_network_only.infl_totsh(1);
-net_myop_norm  = ext_pw0.infl_totsh          / ext_pw0.infl_totsh(1);
+net_only_norm  = ext_network_only.infl_totsh / ext.infl_totsh(1);
+net_myop_norm  = ext_pw0.infl_totsh          / ext.infl_totsh(1);
 main_norm      = ext.infl_totsh              / ext.infl_totsh(1);
 all_data = [all_data, net_only_norm, net_myop_norm, main_norm];
 
@@ -249,18 +248,18 @@ h3 = plot(months, main_norm,      '-',  'Color', c_main, 'LineWidth', 2.0);
 yline(0, 'Color', [0.7 0.7 0.7], 'LineWidth', 0.9);
 hold off;
 
-title('$m_f$ \& $\psi_w$', 'Interpreter', 'latex', 'FontSize', 12);
+
 xlabel('Months after shock', 'FontSize', 9);
-ylabel('Fraction of period-0 response', 'FontSize', 9);
 xlim([0 T-1]);
 legend([h0 h1 h2 h3], ...
        '$\hat{s}_t$', ...
-       '$m_f=1,\;\psi_w=0$ (No myopia or RWR)', ...
-       '$m_f=0.5,\;\psi_w=0$ (Myopia, no RWR)', ...
-       '$m_f=0.5,\;\psi_w=0.7^{1/3}$ (Main)', ...
-       'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 6);
+       '$m_f=1,\;\psi_w=0$ (no myopia or RWR)', ...
+       '$m_f=0.5,\;\psi_w=0$ (myopia, no RWR)', ...
+       '$m_f=0.5,\;\psi_w=0.7^{1/3}$ (main)', ...
+       'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 9);
 grid on;
 set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
+title('$m_f$ \& $\psi_w$', 'Interpreter', 'latex', 'FontSize', 14);
 
 % --- Uniform y-axis ---
 ylo = min(all_data);
@@ -268,7 +267,7 @@ yhi = max(all_data);
 pad = 0.05 * (yhi - ylo);
 set(ax, 'YLim', [ylo - pad, yhi + pad]);
 
-%print(fig4, '../figure/sensitivity', '-dpng', '-r300');
+print(fig4, '../figure/sensitivity', '-dpng', '-r300');
 
 %% ========================================================================
 %% SENSITIVITY — Full 6-panel IRFs, overlaid per parameter (for inspection)
@@ -300,9 +299,9 @@ sens_irf = { ...
         ext_thU11, '$\theta^U = 11/12$',   c_high, 1.5; ...
     }; ...
     '$m_f$ \& $\psi_w$', { ...
-        ext_network_only, '$m_f=1,\;\psi_w=0$ (No myopia or RWR)', c_pink, 1.5; ...
-        ext_pw0,          '$m_f=0.5,\;\psi_w=0$ (Myopia, no RWR)', c_low,  1.5; ...
-        ext,              '$m_f=0.5,\;\psi_w=0.7^{1/3}$ (Main)',   c_main, 2.0; ...
+        ext_network_only, '$m_f=1,\;\psi_w=0$ (no myopia or RWR)', c_pink, 1.5; ...
+        ext_pw0,          '$m_f=0.5,\;\psi_w=0$ (myopia, no RWR)', c_low,  1.5; ...
+        ext,              '$m_f=0.5,\;\psi_w=0.7^{1/3}$ (main)',   c_main, 2.0; ...
     }; ...
 };
 
@@ -313,17 +312,17 @@ for s = 1:size(sens_irf, 1)
     ncols = 3; nrows = 2;
     pw = (1 - mg.left - mg.right - (ncols-1)*mg.hgap) / ncols;
     ph = (1 - mg.top  - mg.bottom - (nrows-1)*mg.vgap) / nrows;
-    
+
     variants_s = sens_irf{s, 2};
     nv = size(variants_s, 1);
-    
+
     for k = 1:6
         row = ceil(k/ncols);  col = mod(k-1, ncols) + 1;
         xp = mg.left + (col-1)*(pw + mg.hgap);
         yp = 1 - mg.top - row*ph - (row-1)*mg.vgap;
         axes('Position', [xp yp pw ph]);
         hold on;
-        
+
         field = [panels_ext{k,1} '_totsh'];
         hlines = gobjects(nv, 1);
         for v = 1:nv
@@ -332,7 +331,7 @@ for s = 1:size(sens_irf, 1)
         end
         yline(0, 'Color', [0.6 0.6 0.6], 'LineWidth', 0.9);
         hold off;
-        
+
         title(panels_ext{k,2}, 'Interpreter', 'latex', 'FontSize', 11);
         xlabel('Months', 'FontSize', 8);
         ylabel(panels_ext{k,3}, 'FontSize', 8);
@@ -342,15 +341,15 @@ for s = 1:size(sens_irf, 1)
         ylim([yl(1) - pad, yl(2) + pad]);
         grid on;
         set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
-        
+
         if k == 1
             legend(hlines, variants_s(:,2), ...
                    'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 7);
         end
     end
-    
+
     %sgtitle(sens_irf{s,1}, 'Interpreter', 'latex', 'FontSize', 14);
-    
+
     % labels = {'psi_w', 'mf', 'theta_U', 'mf_psi_w'};
     % print(figV, ['../figure/sensitivity_irf_' labels{s}], '-dpng', '-r300');
 end

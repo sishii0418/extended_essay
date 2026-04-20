@@ -105,7 +105,7 @@ Whereas the natural gas price shock was transitory, the inflation response was l
 \textit{Notes:} Solid lines show GBP-denominated natural gas (EU) and Brent crude oil prices indexed to September 2018 = 100 (left axis). Black dashed line shows headline CPI inflation, year-on-year (right axis). Sources: FRED (PNGASEUUSDM, DCOILBRENTEU, DEXUSUK, GBRCPALTT01CTGYM)
 \end{figure}
 
-The standard New Keynesian model for a small open economy which imports energy as a factor of production at an exogenous price (hereafter ``the baseline model''; see Appendix \ref{sec:appendix-baseline} for the log-linearised model equations) fails to replicate this hump-shaped and persistent response of inflation to the energy price shock.
+The standard New Keynesian model for a small open economy which imports energy as a factor of production at an exogenous price (hereafter ``the baseline model''; see Appendix~\ref{sec:appendix-baseline} for the log-linearised model equations) fails to replicate this hump-shaped and persistent response of inflation to the energy price shock.
 
 I extend the baseline model in the two following ways to replicate a hump-shaped and persistent inflation response to the energy price shock. \textcolor{blue}{Intuitively WHY?}
 First, I introduce production networks with an upstream industry that utilises imported energy and labour to produce intermediate goods and a downstream industry using the intermediate goods and labour to produce final goods that are consumed by households.
@@ -119,9 +119,9 @@ Second, I introduce real wage rigidity in the labour market, which represents th
 
 The rest of the paper is organised as follows.
 The related literature is reviewed in the following subsection.
-In Section \ref{sec:model}, I describe the baseline model and its extensions, as well as calibrate the model parameters for the simulation.
-In Section \ref{sec:results_and_discussion}, I present the simulation results and evaluate them by conducting further sensitivity analysis.
-Finally, the paper concludes in Section \ref{sec:conclusion}.
+In Section~\ref{sec:model}, I describe the baseline model and its extensions, as well as calibrate the model parameters for the simulation.
+In Section~\ref{sec:results_and_discussion}, I present the simulation results and evaluate them by conducting further sensitivity analysis.
+Finally, the paper concludes in Section~\ref{sec:conclusion}.
 
 Observation:
 \begin{easylist}[itemize]
@@ -230,7 +230,7 @@ The basket of differentiated intermediate goods is aggregated into a composite i
   Q_t = \left(\int_0^1 Q_t(j)^{\frac{\varepsilon - 1}{\varepsilon}} dj\right)^{\frac{\varepsilon}{\varepsilon - 1}}
 \end{equation}
 which is supplied to the downstream industry to be used in the production of consumption goods.
-Here, $\varepsilon$ is the elasticity of substitution within the upstream industry intermediate goods.\footnote{For simplicity, the model assumes the elasticity of substitution is the same for both upstream and downstream industries. I conduct sensitivity analysis on this assumption in Section \ref{subsec:sensitivity_analysis} to show how results would change if it differs between the two industries.}
+Here, $\varepsilon$ is the elasticity of substitution within the upstream industry intermediate goods.\footnote{For simplicity, the model assumes the elasticity of substitution is the same for both upstream and downstream industries. I conduct sensitivity analysis on this assumption in Section~\ref{subsec:sensitivity_analysis} to show how results would change if it differs between the two industries.}
 
 In the downstream industry, there is a continuum of firms $i \in [0,1]$ that uses the composite intermediate goods produced by the upstream industry as well as domestic labour to produce differentiated final goods, which are consumed by households.
 The production of the downstream industry firm $i$ is also in Leontief form:
@@ -395,7 +395,7 @@ A competitive equilibrium consists of prices $\{P^D_t(i), P^U_t(j), W_t, i_t\}_{
 \textcolor{blue}{Model ignores changes in TFP either exogenous or endogenous by the energy price shock.}
 
 \subsection{Log-linearisation}
-In this subsection, I log-linearise the model around the steady state. Detailed derivation is provided in Appendix \ref{sec:appendix-derivation}.
+In this subsection, I log-linearise the model around the steady state. Detailed derivation is provided in Appendix~\ref{sec:appendix-derivation}.
 \textcolor{blue}{14 endogenous variables and 14 equations.}
 
 First, I define the myopic expectation operator $\tilde\E_t[\cdot]$ for the downstream firms's price setting problem.
@@ -466,9 +466,9 @@ where
 \subsection{Calibration}
 I calibrate the model based on the UK economy around the 2022 Energy Crisis.
 The model period is monthly.
-Summary of the parameter values is presented in Table \ref{tab:parameters}.
+Summary of the parameter values is presented in Table~\ref{tab:parameters}.
 Here, I describe the sources and rationales of the calibration choices for each parameter.
-I provide sensitivity analysis in Section \ref{subsec:sensitivity_analysis} to show how the results change if different parameter values are chosen.
+I provide sensitivity analysis in Section~\ref{subsec:sensitivity_analysis} to show how the results change if different parameter values are chosen.
 
 First, the three parameters in the households' utility function follow the standard in the New Keynesian Literature: the discount factor $\beta$ is set to 0.9984, implied by the annual real interest rate of 2\%; elasticity of intertemporal substitution $\sigma$ is set to 0.5; and the Frisch elasticity of labour supply $\psi$ is set to 3.
 
@@ -476,7 +476,7 @@ In the production network, I set the elasticity of substitution $\varepsilon$ to
 % As discussed in the model section, I assume that the elasticity of substitution and subsequently the markup are the same for both upstream and downstream industry.
 Meanwhile, I set the energy cost share in the upstream industry $\alpha^U$ to 0.375.
 The upstream industry in the model represents energy-intensive sectors that utilise imported energy as input to produce intermediate goods.
-Using the annual Supply and Use Tables from the ONS, I calculated the output-weighted average energy cost share across the eight most energy-intensive and intermediate-goods-producing sectors annually from 2017 to 2022.\footnote{Specifically, the eight sectors are Electric Power Generation (\texttt{CPA\_D351}), Gas Manufacture \& Distribution (\texttt{CPA\_D352\_3}), Industrial Gases, Inorganics, Fertilisers (\texttt{CPA\_C20A}), Petrochemicals (\texttt{CPA\_C20B}), Paper and Paper Products (\texttt{CPA\_C17}), Glass, Ceramics, Stone (\texttt{CPA\_C23OTHER}), Basic Iron and Steel (\texttt{CPA\_C241\_3}), and Other Basic Metals \& Casting (\texttt{CPA\_C244\_5}). Detailed calculations are available in Appendix \ref{sec:appendix-calculations}. \textcolor{blue}{Limitation: those industries also produce final goods.}}
+Using the annual Supply and Use Tables from the ONS, I calculated the output-weighted average energy cost share across the eight most energy-intensive and intermediate-goods-producing sectors annually from 2017 to 2022.\footnote{Specifically, the eight sectors are Electric Power Generation (\texttt{CPA\_D351}), Gas Manufacture \& Distribution (\texttt{CPA\_D352\_3}), Industrial Gases, Inorganics, Fertilisers (\texttt{CPA\_C20A}), Petrochemicals (\texttt{CPA\_C20B}), Paper and Paper Products (\texttt{CPA\_C17}), Glass, Ceramics, Stone (\texttt{CPA\_C23OTHER}), Basic Iron and Steel (\texttt{CPA\_C241\_3}), and Other Basic Metals \& Casting (\texttt{CPA\_C244\_5}). Detailed calculations are available in Appendix~\ref{sec:appendix-calculations}. \textcolor{blue}{Limitation: those industries also produce final goods.}}
 I adopt the average of the annual figures for 2017-2019 as the steady state value for $\alpha^U = 0.375.$
 $\alpha^D$ indicates the intermediate input share in the downstream industry, which is set to be 0.4.
 This implies that the overall energy cost share in the final consumption goods is $\alpha^U\alpha^D = 0.15$.
@@ -526,7 +526,7 @@ Frisch elasticity of labour supply & $\psi$ & 3 \\
 Energy cost share (upstream) & $\alpha^U$ & 0.375 \\
 Intermediate input share (downstream) & $\alpha^D$ & 0.4 \\
 Elasticity of substitution & $\varepsilon$ & 11 \\
-Downstream upstream-cost share & $\Phi_{DU}$ & 0.4231 \\
+Downstream's intermediate good-cost share & $\Phi_{DU}$ & 0.4231 (implied) \\
 \midrule
 \textit{Price setting} \\
 Downstream Calvo probability & $\theta^D$ & 11/12 \\
@@ -553,7 +553,7 @@ Terms of trade persistence & $\rho$ & 0.8 \\
 \section{Simulation Results and Discussion}\label{sec:results_and_discussion}
 As a quantitative exercise, I simulate the model using the calibrated parameter values and analyse the impulse response functions (IRFs) to an exogenous shock to the terms of trade.
 In period 0, the economy is hit by an exogenous shock that raises the terms of trade $\hat s_t$ by 100\% from the steady state level, which is equivalent to a doubling of the energy price in domestic currency.
-Figures \ref{fig:persistence-comparison} and \ref{fig:main-irf} display the model simulation results.\footnote{Although the model period is monthly, the impulse responses of CPI inflation and nominal rate are shown in the annualised values.}
+Figures~\ref{fig:persistence-comparison} and \ref{fig:main-irf} display the model simulation results.\footnote{Although the model period is monthly, the impulse responses of CPI inflation and nominal rate are shown in the annualised values.}
 
 \begin{figure}[htbp]
 \begin{center}
@@ -577,13 +577,13 @@ Figures \ref{fig:persistence-comparison} and \ref{fig:main-irf} display the mode
 \textit{Notes:} 
 \end{figure}
 
-First, Figure \ref{fig:persistence-comparison} compares the inflation persistence of the baseline model and the paper's main model after an exogenous shock to the terms of trade, which itself follows an AR(1) process with a persistence parameter $\rho = 0.8$.
-In order to compare the decay rate, rather than the absolute size, of the initial shock, on this plot I standardise the size of the period-0 shock to be 1 for both models as well as the terms of trade shock itself.
+First, Figure~\ref{fig:persistence-comparison} compares the inflation persistence of the baseline model and the paper's main model after an exogenous shock to the terms of trade, which itself follows an AR(1) process with a persistence parameter $\rho = 0.8$.
+In order to compare the decay rate and absolute size of the initial shock simultaneously, on this plot I normalise the inflation response of the paper's main model and the terms of trade shock in period 0 to one.
 The terms of trade $\hat s_t$ is shown in grey dot dashed line, from which one can see that half of the initial shock disappears within 3.1 months, and only 10\% of the original shock remains after 10.3 months.
-Inflation response of the baseline model is shown in black solid line, showing that the baseline model fails to replicate the inflation persistence that the UK economy experienced during the 2022 Energy Crisis, as it goes back to the steady state faster than the terms of trade shock.
+Inflation response of the baseline model is shown in black solid line, showing that the baseline model fails to replicate the inflation persistence that the UK economy experienced during the 2022 Energy Crisis, as it goes back to the steady state faster than the terms of trade shock even though the initial shock to inflation is larger.
 In contrast, the paper's main model, whose inflation response is shown in orange solid line, exhibits a delayed peak of inflation two months after the initial shock, and the inflation rate decreases at a much slower pace than the baseline model as well as the terms of trade shock with the half decay period of around 9 months.
 
-Next, Figure \ref{fig:main-irf} shows the IRFs of different endogenous variables in the main model, with which I describe the transmission mechanism of the energy price shock in generating the observed inflation persistence.
+Next, Figure~\ref{fig:main-irf} shows the IRFs of different endogenous variables in the main model, with which I describe the transmission mechanism of the energy price shock in generating the observed inflation persistence.
 First, on the top left panel, the terms of trade $\hat s_t$ is hit by an 100\% exogenous shock in period 0, which decays monthly at the rate of $\rho = 0.8$, with only 10\% of the initial shock remaining after 10 months.
 
 As they use imported energy as input, the upstream industry firms experience an increase in their marginal cost, which leads to an immediate adjustment in the upstream price level $\hat p^U_t$ as the forward-looking Calvo-pricing firms increase their prices based on their rational expectations about the future path of the terms of trade.
@@ -605,16 +605,28 @@ On the bottom right panel, the nominal interest rate $\hat i_t$ increases by up 
 However, the monetary policy tightening is not sufficient to offset the inflationary pressure from the energy price shock, but to reduce the aggregate demand.
 
 \subsection{Sensitivity Analysis}\label{subsec:sensitivity_analysis}
+I conduct sensitivity analysis with varying parameter values for examining the model robustness as well as for understanding the role of different mechanisms in generating the inflation persistence.
+Figure~\ref{fig:sensitivity} shows the resulting persistence of inflation response under different parameter values to be compared with the original.
+Similarly to Figure~\ref{fig:persistence-comparison}, I normalise the main model's inflation response and the terms of trade shock in period 0 to one.
+On the top left panel, I vary the real wage rigidity parameter $\psi_w$ from the original value of $0.7^{1/3} \approx 0.888$ shown in orange to $0$ in blue and $0.9^{1/3} \approx 0.965$ in green.
+It shows that in absence of the real wage rigidity, the initial inflation response is higher than the original case and closer to its peak that arrives with a one-month lag, after which the inflation decays at a slightly faster pace than the original case.
+In contrast, with a higher degree of real wage rigidity of $\psi_w = 0.9^{1/3} \approx 0.965$, though the peak level of inflation is lower than the original case, the inflation response is more persistent.
+Therefore, comparing the three cases with different real wage rigidity parameters, one can see that the real wage rigidity plays a role in delaying the peak of the inflation response.
 
-Sensitivity analysis:
-\begin{easylist}[itemize]
-\ListProperties(Style=\color{blue})
-  @ Varying the degree of real wage rigidity $\psi_w \in \{0.705\}$
-  @ upstream Calvo pricing parameter $\theta_U \in \{0.5\} + \{0, 0.3, 0.7\}$ \citep{nakamura2008five}
-  @ Downstream myopica parameter $m_f \in \{0, 0.5, 1\}$
-  @ CES rather than Leontief production function?
-  @ Values of $\alpha$'s
-\end{easylist}
+Second, the top right panel varies the downstream firms' myopia parameter $m_f$ from $0.5$ to $1$ (completely rational, shown in blue) and $0$ (fully myopic, shown in green).
+When the downstream firms are completely rational, the hump in the inflation response disappears and the inflation is less persistent than the original case.
+On the other hand, when the downstream firms are fully myopic, i.e, their reset price is solely based on the current marginal cost, the initial inflation response is smaller than the original case because of the lag in the upstream price adjustment, after which the inflation response is qualitatively similar to the original case with a delayed peak and a slow decay.
+
+Next, on the bottom left panel, the Calvo probability parameter for the upstream industry $\theta^U$ is varied from the original value of $3/4$ to $0.5$ and $11/12$ shown in blue and green, respectively.
+When the upstream price is more flexible with $\theta^U = 0.5$, the initial inflation response is twice as large as the original case, which however decays at a much faster pace afterwards.
+This is because the upstream firms can adjust their prices more instantaneously in response to the energy price shock, so that the shock is transmitted to the downstream firms at a closer pace to the terms of trade shock.
+In contrast, when the upstream price is more rigid with $\theta^U = 11/12$, the initial inflation response is smaller than the original case, but the inflation is more persistent and peaks with a larger lag.
+To conclude, the upstream Calvo probability parameter $\theta^U$ controls the tradeoff between the initial size of the inflation response and its persistence.
+
+Finally, the bottom right panel adjusts the downstream firms' myopia parameter $m_f$ and the real wage rigidity $\psi_w$ simultaneously.
+Shown in pink is when the downstream firms are completely rational and there is no real wage rigidity, which informs that the vertical production network structure with Calvo pricing alone does not generate a hump-shaped response of inflation nor the inflation persistence.
+The blue line adds myopia of the downstream firms $m_f = 0.5$ but the labour market is still flexible, which enlarges the initial inflation response and adds a one-month lag in the peak.
+Then, the original case with the real wage rigidity of $\psi_w = 0.7^{1/3} \approx 0.888$ is shown in orange, which displays that the real wage rigidity plays a role in delaying the peak of the inflation response and making the inflation more persistent, as observed in the UK economy after 2022.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -627,9 +639,9 @@ Sensitivity analysis:
 \textit{Notes:} 
 \end{figure}
 
+\section{Conclusion}\label{sec:conclusion}
 Policy implications?
 
-\section{Conclusion}\label{sec:conclusion}
 
 Model limitations:
 \begin{easylist}[itemize]
@@ -670,7 +682,7 @@ The baseline model is characterised by the following ten log-linearised equation
   \hat{s}_t &= \rho\hat{s}_{t-1} + u_t & &\text{(terms-of-trade shock)} \label{eq:bl_tot}
 \end{align}
 
-For calibration, the adopted parameter values are summarised in Table \ref{tab:baseline_params}.
+For calibration, the adopted parameter values are summarised in Table~\ref{tab:baseline_params}.
 
 \begin{table}[htbp]
 \centering
