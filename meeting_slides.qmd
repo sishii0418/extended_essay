@@ -1,5 +1,5 @@
 ---
-title: "Inflation Persistence After an Energy-Price Shock: A Two-Sector New Keynesian Model with Production Networks and Real Wage Rigidity"
+title: "Inflation Persistence After an Energy-Price Shock: New Keynesian Model with Vertical Production Networks and Real Wage Rigidity"
 author: "Shunsuke Ishii"
 editor:
   render-on-save: true
@@ -60,7 +60,7 @@ $$
 - where $m_f \in [0,1]$ with $m_f = 1$ being completely rational
 
 ### 3. **\textcolor{blue}{Real wage rigidity}** \textcolor{black}{in the labour market}
-- @blanchard2007real
+- Parsimonious way to represent labour market frictions, such as hiring costs, à la @blanchard2007real
 - Only a fraction $1 - \psi_w$ of the gap between the actual real wage $\hat w_t$ and the flexible real wage $\hat w^f_t$ is adjusted in each period:
 
 $$
