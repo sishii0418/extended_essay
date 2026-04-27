@@ -231,7 +231,52 @@ Other parameters are calibrated to standard values in the literature.
 
 ### Upstream Calvo Probability $\theta^U$
 
+- $\theta^U = 0.5$ (average price duration of 2 months):
+  - Twice as large initial response as the original case
+  - Inflation decreases much faster afterwards
+  - Upstream firms are more able to pass through the energy price shock
+    - Vice versa for less flexible prices with $\theta^U = 11/12$
+
 ### Combination: Myopia $m_f$ and Real Wage Rigidity $\psi_w$
+
+- No myopia and no real wage rigidity ($m_f = 0, \psi_w = 0$):
+  - Vertical production network with Calvo pricing for both industries
+  - No lag in the response peak nor inflation persistence
+- Myopia but no real wage rigidity ($m_f = 0.5, \psi_w = 0$):
+  - Higher and more persistent inflation but the peak lag of only one month
+  - Myopia alone cannot generate enough long lag observed in the data
+- Myopia and real wage rigidity ($m_f = 0.5, \psi_w = 0.7^{1/3}$, the original case):
+  - 3-month lag in the response peak, after which inflation is more persistent
+    - The peak is only as high as the previous case with no real wage rigidity, but importantly the response is hump-shaped
+
+## Discussions and Conclusion
+
+Three extensions combined can generate a lag in the inflation response peak \& persistence as observed in the UK
+
+- Vertical production network with Calvo pricing for both industries
+- Myopia in downstream firms' price setting
+- Real wage rigidity
+
+### Limitations
+
+- Vertical structure of the production network
+  - In reality, what I have classified as the "upstream industry" also produces final consumption goods
+- Inflation goes back to zero in the model, while the UK inflation remains around 3\%
+  - There may be simultaneous trends in reality, though
+- I haven't discussed about the absolute magnitude of the shock / response
+  - Difficult to identify the size of the energy price shock in practice?
+- Choice of and reasoning behind the parameter values
+  - Particularly, $\theta^U = 3/4, \theta^D = 11/12, m_f = 0.5, \psi_w = 0.7^{1/3}$
+  - I believe those are "theoretically" somewhat reasonable, but not necessarily supported by empirical micro evidence [@zhou2019determinants;@bunn2012examining;@bunn2012how]
+
+---
+
+### Practical questions
+
+- How much should I describe the baseline model?
+- Should I derive the log-linearisation in the appendix?
+- Do parameter value choices make sense? Is more reasoning required?
+  - Picking a single country doesn't mean much? As many parameters are not directly measured in data?
 
 ## References
 

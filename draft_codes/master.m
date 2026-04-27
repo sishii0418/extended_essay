@@ -79,7 +79,7 @@ print(fig3, '../figure/main_irf', '-dpng', '-r300');
 %% ========================================================================
 %% FIGURE 2 — Normalised persistence comparison
 %%
-%%   Three lines, each normalised by its period-1 value:
+%%   Three lines; normalisation is due to extended CPI infl:
 %%     (1) Terms of trade        — grey dash-dot  (shock decay)
 %%     (2) Baseline CPI infl     — black           (fast decay)
 %%     (3) Extended CPI infl     — orange           (persistent)
@@ -110,6 +110,41 @@ grid on;
 set(gca, 'FontSize', 10, 'GridAlpha', 0.25);
 
 print(fig2, '../figure/persistence_comparison', '-dpng', '-r300');
+
+%% ========================================================================
+%% FIGURE 2a — Normalised persistence comparison
+%%
+%%   Three lines, each normalised by its period-1 value:
+%%     (1) Terms of trade        — grey dash-dot  (shock decay)
+%%     (2) Baseline CPI infl     — black           (fast decay)
+%%     (3) Extended CPI infl     — orange           (persistent)
+%% ========================================================================
+% tot_norm       = ext.tot_totsh    / ext.tot_totsh(1);
+base_infl_norm_a = base.infl_totsh  / base.infl_totsh(1);
+% ext_infl_norm  = ext.infl_totsh   / ext.infl_totsh(1);
+
+fig2a = figure('Position', [80 80 750 460]);
+hold on;
+
+h1 = plot(months, tot_norm,       '-.', 'Color', [0.5 0.5 0.5], 'LineWidth', 1.5);
+h2 = plot(months, base_infl_norm_a, '-', 'Color', [0 0 0], 'LineWidth', 1.5);  % black = baseline
+h3 = plot(months, ext_infl_norm,  '-', 'Color', [0.835 0.369 0.0],   'LineWidth', 2.2);  % #D55E00 orange = extended
+yline(0, 'Color', [0.7 0.7 0.7], 'LineWidth', 0.9);
+
+hold off;
+
+xlabel('Months after shock', 'FontSize', 11);
+ylabel('Fraction of period-0 log-deviation', 'FontSize', 11);
+legend([h1 h2 h3], ...
+       'Energy price shock (AR(1) with $\rho = 0.8$)', ...
+       'Vanilla model CPI inflation', ...
+       'Extended model CPI inflation', ...
+       'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 10);
+xlim([0 T-1]);
+grid on;
+set(gca, 'FontSize', 10, 'GridAlpha', 0.25);
+
+print(fig2a, '../figure/persistence_comparison_normalised', '-dpng', '-r300');
 
 %% ========================================================================
 %% FIGURE A1 — Baseline model: mechanism decomposition (2×3)
@@ -191,7 +226,19 @@ ncols = 2; nrows = 2;
 pw = (1 - margins.left - margins.right - (ncols-1)*margins.hgap) / ncols;
 ph = (1 - margins.top  - margins.bottom - (nrows-1)*margins.vgap) / nrows;
 
-% ... (color and sens definitions unchanged) ...
+% Colors (Okabe-Ito colorblind-safe)
+c_main = [0.835 0.369 0.0];    % #D55E00 orange
+c_low  = [0.0   0.447 0.698];  % #0072B2 blue
+c_high = [0.0   0.620 0.451];  % #009E73 green
+c_tot  = [0.5   0.5   0.5];    % grey
+c_pink = [0.8   0.475 0.655];  % #CC79A7 pink
+
+% { title, main_irfs, low_irfs, low_label, high_irfs, high_label, main_label }
+sens = { ...
+    '$\psi_w$',    ext,  ext_pw0,   '$\psi_w=0$',       ext_pw09,  '$\psi_w=0.9^{1/3}$',  '$\psi_w=0.7^{1/3}$ (main)'; ...
+    '$m_f$',       ext,  ext_mf1,   '$m_f=1$',           ext_mf0,   '$m_f=0$',              '$m_f=0.5$ (main)'; ...
+    '$\theta^U$',  ext,  ext_thU05, '$\theta^U=0.5$',    ext_thU11, '$\theta^U=11/12$',     '$\theta^U=3/4$ (main)'; ...
+};
 
 ax = gobjects(4, 1);
 all_data = tot_norm;
