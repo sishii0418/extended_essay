@@ -58,7 +58,7 @@ frisch  = 3;        // Frisch elasticity, from baseline
 theta_D = 11/12;    // Downstream Calvo (= baseline theta; avg. price duration 12 months)
 theta_U = 0.75;      // Upstream Calvo (avg. price duration 4 months; sensitivity: 0.3, 0.7)
 alph_D  = 0.4;     // Downstream upstream-input share alpha^D (sensitivity: 0.05, 0.15)
-mf      = 0.5;      // Myopia (sensitivity: 0, 1)
+mf      = 0.5^(1/3);      // Myopia (sensitivity: 0, 1)
 psi_w   = 0.7^(1/3);    // Real wage rigidity
 phi     = 0.9;      // Taylor smoothing, from baseline
 chipi   = 3;        // Taylor inflation response, from baseline

@@ -211,3 +211,12 @@ ggsave("figure/energy_prices_cpi_inflation.png", width = 8, height = 6, dpi = 30
 # Note: Core CPI
 Core CPI inflation remained high, or even higher than CPI inflation after 2023.
 This implies second-round effects of energy price shock.
+
+```{r}
+library(forecast)
+auto.arima(energy_prices$natural_gas_price_relative[48:79], trace = TRUE) %>%
+  summary()
+
+arima(energy_prices$natural_gas_price_relative[48:79], order = c(1, 0, 0)) %>%
+  summary()
+```

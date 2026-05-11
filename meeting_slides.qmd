@@ -9,6 +9,8 @@ format:
     institute: "EC424 Extended Essay"
     include-in-header:
       text: |
+        \usepackage{tikz}
+        \usetikzlibrary{arrows.meta, positioning, calc}
         \usepackage{xcolor}
         \newcommand{\E}{\mathbb{E}}
         \newcommand{\suminf}[1]{\sum_{#1=0}^\infty}
@@ -45,6 +47,46 @@ What happened in the UK after the gas price spike?
 - Production function remains Leontief for both sectors
 - Competitive sector remains unchanged, producing tradable goods using labour only for the balance of payments equilibrium
 - Single labour market with free mobility ($\implies$ equal wage across sectors)
+
+
+```{=latex}
+\centering
+\begin{tikzpicture}[
+    node distance=2.4cm,
+    box/.style={
+        draw, rounded corners=4pt, 
+        minimum width=2.8cm, minimum height=1.3cm, 
+        align=center, font=\normalsize,
+        line width=0.6pt
+    },
+    input/.style={
+        font=\normalsize\itshape, text=black!70
+    },
+    arr/.style={
+        -{Stealth[length=6pt]}, line width=0.8pt
+    },
+    arrlabel/.style={
+        font=\small, midway, above, align=center, text=black!70
+    }
+]
+
+\node[input] (energy) {Energy};
+\node[box, right=0.9cm of energy] (upstream) {\textbf{Upstream}\\\textbf{Firms}};
+\node[box, right=of upstream] (downstream) {\textbf{Downstream}\\\textbf{Firms}};
+\node[box, right=1.5cm of downstream] (consumers) {\textbf{Consumers}};
+\node[input, below=0.9cm of $(upstream)!0.5!(downstream)$] (labour) {Labour};
+
+\draw[arr] (energy) -- (upstream);
+\draw[arr] (upstream) -- node[arrlabel] {intermediate\\goods} (downstream);
+\draw[arr] (downstream) -- node[arrlabel] {final\\goods} (consumers);
+\draw[arr] (labour) -- (upstream);
+\draw[arr] (labour) -- (downstream);
+
+\node[font=\small\bfseries, above=0.4cm of energy, text=red!70!black] (shock) {Shock};
+\draw[-{Stealth[length=5pt]}, red!70!black, dashed, line width=0.6pt] (shock) -- (energy);
+
+\end{tikzpicture}
+```
 
 ---
 

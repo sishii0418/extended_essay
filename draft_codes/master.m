@@ -9,7 +9,7 @@
 %% ============================================================
 close all; clc;
 
-%% ---- Run baseline model ------------------------------------------------
+%% ---- Run benchmark model ------------------------------------------------
 dynare inflation.mod noclearall nograph
 base = oo_.irfs;
 close all;
@@ -81,8 +81,8 @@ print(fig3, '../figure/main_irf', '-dpng', '-r300');
 %%
 %%   Three lines; normalisation is due to extended CPI infl:
 %%     (1) Terms of trade        — grey dash-dot  (shock decay)
-%%     (2) Baseline CPI infl     — black           (fast decay)
-%%     (3) Extended CPI infl     — orange           (persistent)
+%%     (2) Benchmark CPI infl    — black          (fast decay)
+%%     (3) Extended CPI infl     — orange         (persistent)
 %% ========================================================================
 tot_norm       = ext.tot_totsh    / ext.tot_totsh(1);
 base_infl_norm = base.infl_totsh  / ext.infl_totsh(1);
@@ -92,17 +92,17 @@ fig2 = figure('Position', [80 80 750 460]);
 hold on;
 
 h1 = plot(months, tot_norm,       '-.', 'Color', [0.5 0.5 0.5], 'LineWidth', 1.5);
-h2 = plot(months, base_infl_norm, '-', 'Color', [0 0 0], 'LineWidth', 1.5);  % black = baseline
+h2 = plot(months, base_infl_norm, '-', 'Color', [0 0 0], 'LineWidth', 1.5);  % black = benchmark
 h3 = plot(months, ext_infl_norm,  '-', 'Color', [0.835 0.369 0.0],   'LineWidth', 2.2);  % #D55E00 orange = extended
 yline(0, 'Color', [0.7 0.7 0.7], 'LineWidth', 0.9);
 
 hold off;
 
 xlabel('Months after shock', 'FontSize', 11);
-ylabel('Fraction of period-0 inflation response of the main model', 'FontSize', 11);
+ylabel("Fraction of the main model's period-0 inflation", 'FontSize', 11);
 legend([h1 h2 h3], ...
        'Terms of trade ($\hat{s}_t$)', ...
-       'Baseline model CPI inflation', ...
+       'Benchmark model CPI inflation', ...
        'Extended model CPI inflation', ...
        'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 10);
 xlim([0 T-1]);
@@ -116,8 +116,8 @@ print(fig2, '../figure/persistence_comparison', '-dpng', '-r300');
 %%
 %%   Three lines, each normalised by its period-1 value:
 %%     (1) Terms of trade        — grey dash-dot  (shock decay)
-%%     (2) Baseline CPI infl     — black           (fast decay)
-%%     (3) Extended CPI infl     — orange           (persistent)
+%%     (2) Benchmark CPI infl    — black          (fast decay)
+%%     (3) Extended CPI infl     — orange         (persistent)
 %% ========================================================================
 % tot_norm       = ext.tot_totsh    / ext.tot_totsh(1);
 base_infl_norm_a = base.infl_totsh  / base.infl_totsh(1);
@@ -127,7 +127,7 @@ fig2a = figure('Position', [80 80 750 460]);
 hold on;
 
 h1 = plot(months, tot_norm,       '-.', 'Color', [0.5 0.5 0.5], 'LineWidth', 1.5);
-h2 = plot(months, base_infl_norm_a, '-', 'Color', [0 0 0], 'LineWidth', 1.5);  % black = baseline
+h2 = plot(months, base_infl_norm_a, '-', 'Color', [0 0 0], 'LineWidth', 1.5);  % black = benchmark
 h3 = plot(months, ext_infl_norm,  '-', 'Color', [0.835 0.369 0.0],   'LineWidth', 2.2);  % #D55E00 orange = extended
 yline(0, 'Color', [0.7 0.7 0.7], 'LineWidth', 0.9);
 
@@ -144,10 +144,10 @@ xlim([0 T-1]);
 grid on;
 set(gca, 'FontSize', 10, 'GridAlpha', 0.25);
 
-print(fig2a, '../figure/persistence_comparison_normalised', '-dpng', '-r300');
+% print(fig2a, '../figure/persistence_comparison_normalised', '-dpng', '-r300');
 
 %% ========================================================================
-%% FIGURE A1 — Baseline model: mechanism decomposition (2×3)
+%% FIGURE A1 — Benchmark model: mechanism decomposition (2×3)
 %%
 %%   Upper row (structural):   tot        rmc        rwage
 %%   Lower row (outcomes):     infl       gdp        nomint
@@ -193,7 +193,7 @@ for k = 1:6
     set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
 end
 
-print(figA1, '../figure/baseline_irf', '-dpng', '-r300');
+print(figA1, '../figure/benchmark_irf', '-dpng', '-r300');
 
 %% ========================================================================
 %% SENSITIVITY ANALYSIS — Run all variants
@@ -208,7 +208,7 @@ ext_mf0   = run_extended(struct('mf', 0));   close all;
 ext_mf1   = run_extended(struct('mf', 1));   close all;
 
 % --- theta_U variants ---
-ext_thU05  = run_extended(struct('theta_U', 0.5));    close all;
+ext_thU0  = run_extended(struct('theta_U', 0));    close all;
 ext_thU11  = run_extended(struct('theta_U', 11/12));  close all;
 
 
@@ -235,9 +235,9 @@ c_pink = [0.8   0.475 0.655];  % #CC79A7 pink
 
 % { title, main_irfs, low_irfs, low_label, high_irfs, high_label, main_label }
 sens = { ...
-    '$\psi_w$',    ext,  ext_pw0,   '$\psi_w=0$',       ext_pw09,  '$\psi_w=0.9^{1/3}$',  '$\psi_w=0.7^{1/3}$ (main)'; ...
-    '$m_f$',       ext,  ext_mf1,   '$m_f=1$',           ext_mf0,   '$m_f=0$',              '$m_f=0.5$ (main)'; ...
-    '$\theta^U$',  ext,  ext_thU05, '$\theta^U=0.5$',    ext_thU11, '$\theta^U=11/12$',     '$\theta^U=3/4$ (main)'; ...
+    '$\psi_w$',    ext,  ext_pw0,  '$\psi_w=0$',      ext_pw09,  '$\psi_w=0.9^{1/3}$',  '$\psi_w=0.7^{1/3}$ (main)'; ...
+    '$m_f$',       ext,  ext_mf1,  '$m_f=1$',         ext_mf0,   '$m_f=0$',             '$m_f=0.75$ (main)'; ...
+    '$\theta^U$',  ext,  ext_thU0, '$\theta^U=0$',    ext_thU11, '$\theta^U=11/12$',    '$\theta^U=3/4$ (main)'; ...
 };
 
 ax = gobjects(4, 1);
@@ -265,7 +265,7 @@ for p = 1:3
 
     xlabel('Months after shock', 'FontSize', 9);
     if col == 1
-        ylabel('Fraction of period-0 inflation response of the main model', 'FontSize', 9);
+        ylabel("Fraction of the main model's period-0 inflation", 'FontSize', 9);
     end
     xlim([0 T-1]);
     legend([h0 h1 h2 h3], ...
@@ -301,8 +301,8 @@ xlim([0 T-1]);
 legend([h0 h1 h2 h3], ...
        '$\hat{s}_t$', ...
        '$m_f=1,\;\psi_w=0$ (no myopia or RWR)', ...
-       '$m_f=0.5,\;\psi_w=0$ (myopia, no RWR)', ...
-       '$m_f=0.5,\;\psi_w=0.7^{1/3}$ (main)', ...
+       '$m_f=0.75,\;\psi_w=0$ (myopia, no RWR)', ...
+       '$m_f=0.75,\;\psi_w=0.7^{1/3}$ (main)', ...
        'Interpreter', 'latex', 'Location', 'northeast', 'FontSize', 9);
 grid on;
 set(gca, 'FontSize', 8, 'GridAlpha', 0.25);
@@ -337,18 +337,18 @@ sens_irf = { ...
     }; ...
     '$m_f$', { ...
         ext_mf1,  '$m_f = 1$',             c_low,  1.5; ...
-        ext,      '$m_f = 0.5$ (main)',     c_main, 2.0; ...
+        ext,      '$m_f = 0.75$ (main)',     c_main, 2.0; ...
         ext_mf0,  '$m_f = 0$',             c_high, 1.5; ...
     }; ...
     '$\theta^U$', { ...
-        ext_thU05, '$\theta^U = 0.5$',     c_low,  1.5; ...
+        ext_thU0, '$\theta^U = 0$',     c_low,  1.5; ...
         ext,       '$\theta^U = 3/4$ (main)', c_main, 2.0; ...
         ext_thU11, '$\theta^U = 11/12$',   c_high, 1.5; ...
     }; ...
     '$m_f$ \& $\psi_w$', { ...
         ext_network_only, '$m_f=1,\;\psi_w=0$ (no myopia or RWR)', c_pink, 1.5; ...
-        ext_pw0,          '$m_f=0.5,\;\psi_w=0$ (myopia, no RWR)', c_low,  1.5; ...
-        ext,              '$m_f=0.5,\;\psi_w=0.7^{1/3}$ (main)',   c_main, 2.0; ...
+        ext_pw0,          '$m_f=0.75,\;\psi_w=0$ (myopia, no RWR)', c_low,  1.5; ...
+        ext,              '$m_f=0.75,\;\psi_w=0.7^{1/3}$ (main)',   c_main, 2.0; ...
     }; ...
 };
 
@@ -395,10 +395,10 @@ for s = 1:size(sens_irf, 1)
         end
     end
 
-    %sgtitle(sens_irf{s,1}, 'Interpreter', 'latex', 'FontSize', 14);
+    sgtitle(sens_irf{s,1}, 'Interpreter', 'latex', 'FontSize', 14);
 
-    % labels = {'psi_w', 'mf', 'theta_U', 'mf_psi_w'};
-    % print(figV, ['../figure/sensitivity_irf_' labels{s}], '-dpng', '-r300');
+    labels = {'psi_w', 'mf', 'theta_U', 'mf_psi_w'};
+    print(figV, ['../figure/sensitivity_irf_' labels{s}], '-dpng', '-r300');
 end
 
 %% ========================================================================
@@ -410,7 +410,7 @@ function irfs = run_extended(params)
     
     % Default = main calibration
     defaults = struct( ...
-        'mf',      0.5, ...
+        'mf',      0.75, ...
         'psi_w',   0.7^(1/3), ...
         'theta_U', 0.75 ...
     );

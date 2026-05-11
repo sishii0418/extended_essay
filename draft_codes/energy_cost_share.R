@@ -12,7 +12,8 @@
 # TODO: IOT exists for pre 2017 but seems to be in a different format.
 
 library(tidyverse)
-library(readxl)    # install.packages("readxl") if needed
+library(readxl)
+library(kableExtra)
 
 # --- Source URLs by year ---
 urls <- list(
@@ -125,6 +126,82 @@ results %>%
   arrange(year, sic) %>%
   print(n = Inf)
 
+# Table
+# --- Reshape: wide format with year as column groups ---
+tab <- results %>%
+  filter(year %in% 2017:2019) %>%
+  mutate(
+    name = str_replace_all(name, "&", "\\\\&"),
+    energy_cost = formatC(round(energy_cost, 0), format = "f", digits = 0, big.mark = ","),
+    gross_output = formatC(round(gross_output, 0), format = "f", digits = 0, big.mark = ","),
+    energy_share_pct = round(100 * energy_share, 1)
+  ) %>%
+  select(year, name, energy_cost, gross_output, energy_share_pct) %>%
+  pivot_wider(
+    names_from = year,
+    values_from = c(energy_cost, gross_output, energy_share_pct),
+    names_glue = "{year}_{.value}"
+  ) %>%
+  select(
+    name,
+    `2017_energy_cost`, `2017_gross_output`, `2017_energy_share_pct`,
+    `2018_energy_cost`, `2018_gross_output`, `2018_energy_share_pct`,
+    `2019_energy_cost`, `2019_gross_output`, `2019_energy_share_pct`
+  )
+ 
+# --- Compute output-weighted average row for each year ---
+avg_row <- results %>%
+  filter(year %in% 2017:2019) %>%
+  group_by(year) %>%
+  summarise(
+    energy_cost_raw = sum(energy_cost),
+    gross_output_raw = sum(gross_output),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    energy_cost = formatC(round(energy_cost_raw, 0), format = "f", digits = 0, big.mark = ","),
+    gross_output = formatC(round(gross_output_raw, 0), format = "f", digits = 0, big.mark = ","),
+    energy_share_pct = round(100 * energy_cost_raw / gross_output_raw, 1)
+  ) %>%
+  select(year, energy_cost, gross_output, energy_share_pct) %>%
+  pivot_wider(
+    names_from = year,
+    values_from = c(energy_cost, gross_output, energy_share_pct),
+    names_glue = "{year}_{.value}"
+  ) %>%
+  mutate(name = "\\textbf{Output-weighted average}") %>%
+  select(names(tab))
+ 
+# --- Bind and produce LaTeX ---
+full_tab <- bind_rows(tab, avg_row)
+ 
+col_names <- c(
+  "Sector",
+  rep(c("Energy", "Output", "Share"), 3)
+)
+ 
+# linesep: no addlinespace, \midrule after last sector row (row 8)
+n_sectors <- nrow(tab)
+linesep <- c(rep("", n_sectors - 1), "\\midrule", "")
+ 
+tex_out <- kbl(full_tab,
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    col.names = col_names,
+    align = c("l", rep("r", 9)),
+    linesep = linesep
+) %>%
+  add_header_above(c(" " = 1, "2017" = 3, "2018" = 3, "2019" = 3)) %>%
+  kable_styling(latex_options = c())
+ 
+tex_str <- str_remove(as.character(tex_out), "\\\\begin\\{table\\}\\n\\\\centering\\n")
+tex_str <- str_remove(tex_str, "\\n\\\\end\\{table\\}")
+cat(tex_str, file = "alpha_u.tex")
+
+
+
+# Figure
 energy_share <- results %>%
   group_by(year) %>%
   summarise(
@@ -137,29 +214,30 @@ energy_share %>%
   ggplot(aes(x = year, y = energy_share_all8 * 100)) +
   geom_line() +
   geom_point() +
-  labs(title = "Energy Cost Share (All 8 Industries)", x = "Year", y = "Energy Cost Share (%)") +
-  theme_minimal() +
+  labs(x = "Year", y = "Energy Cost Share (%)") +
+  theme_classic() +
   geom_hline(yintercept = 0.375 * 100, linetype = "dashed", color = "red")
+ggsave("figure/energy_cost_share.png", width = 8, height = 6, dpi = 300)
 
 # --- Year-by-year GVA-weighted averages from long-format `results` ---
-gva_weighted_by_year <- results %>%
-  group_by(year) %>%
-  summarise(
-    weighted_avg_all8 = sum(energy_share * gva_level, na.rm = TRUE) / sum(gva_level, na.rm = TRUE),
-    weighted_avg_excl_energy = sum(if_else(!sic %in% c("CPA_D351", "CPA_D352_3"), energy_share * gva_level, 0), na.rm = TRUE) /
-      sum(if_else(!sic %in% c("CPA_D351", "CPA_D352_3"), gva_level, 0), na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  mutate(
-    weighted_avg_all8_pct = 100 * weighted_avg_all8,
-    weighted_avg_excl_energy_pct = 100 * weighted_avg_excl_energy
-  )
+# gva_weighted_by_year <- results %>%
+#   group_by(year) %>%
+#   summarise(
+#     weighted_avg_all8 = sum(energy_share * gva_level, na.rm = TRUE) / sum(gva_level, na.rm = TRUE),
+#     weighted_avg_excl_energy = sum(if_else(!sic %in% c("CPA_D351", "CPA_D352_3"), energy_share * gva_level, 0), na.rm = TRUE) /
+#       sum(if_else(!sic %in% c("CPA_D351", "CPA_D352_3"), gva_level, 0), na.rm = TRUE),
+#     .groups = "drop"
+#   ) %>%
+#   mutate(
+#     weighted_avg_all8_pct = 100 * weighted_avg_all8,
+#     weighted_avg_excl_energy_pct = 100 * weighted_avg_excl_energy
+#   )
 
-print(gva_weighted_by_year, n = Inf)
+# print(gva_weighted_by_year, n = Inf)
 
-gva_weighted_by_year %>%
-  ggplot(aes(x = year, y = weighted_avg_all8_pct)) +
-  geom_line() +
-  geom_point() +
-  labs(title = "GVA-Weighted Average Energy Share (All 8 Industries)", x = "Year", y = "Weighted Average (%)") +
-  theme_minimal()
+# gva_weighted_by_year %>%
+#   ggplot(aes(x = year, y = weighted_avg_all8_pct)) +
+#   geom_line() +
+#   geom_point() +
+#   labs(title = "GVA-Weighted Average Energy Share (All 8 Industries)", x = "Year", y = "Weighted Average (%)") +
+#   theme_minimal()
