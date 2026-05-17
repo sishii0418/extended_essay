@@ -28,6 +28,10 @@
 
 \usepackage[bottom]{footmisc}
 
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc}
+\usepackage{xcolor}
+
 \usepackage{tabularray}
 \usepackage{codehigh}
 \usepackage[normalem]{ulem}
@@ -66,13 +70,13 @@
 
 \begin{document}
 \begin{titlepage}
-\title{Inflation Persistence After an Energy-Price Shock: New Keynesian Model with Vertical Production Networks with Myopia and Real Wage Rigidity\thanks{I thank Dr Kevin Sheedy for his helpful guidance. I used generative AI Claude Opus 4.6 to assist with generating research ideas, coding, and writing. However, all remaining errors are my own.}}
+\title{Inflation Persistence After an Energy-Price Shock: New Keynesian Model with Vertical Production Networks with Myopia and Real Wage Rigidity\thanks{I thank Dr Kevin Sheedy for his helpful guidance. I used generative AI (Claude Opus 4.6) to assist with generating research ideas, coding, and writing. However, all remaining errors are my own.}}
 \author{Candidate Number: 61980}
-\date{12 May 2026 \vskip \baselineskip Word Count: 5,991}
+\date{17 May 2026 \vskip \baselineskip Word Count: 5,996}
 \maketitle
 %TC:break Abstract
 \begin{abstract}
-\noindent The energy crisis in 2022 led to a surge in natural gas prices, which has in turn caused a stabilised inflation response with a lagged peak of a couple of months in the UK. A standard New Keynesian model with exogenously priced energy as a production input fails to replicate this hump-shaped and persistent response. I propose three extension to the baseline model to replicate the observed inflation dynamics in the UK: a vertically integrated production network where upstream industry firms use energy and labour to produce intermediate goods while downstream firms use intermediate goods and labour to produce consumption goods; myopia in downstream firms’ pricing decisions reflecting on the difficulty or reluctance of forecasting future prices of intermediate goods; real wage rigidities as a parsimonious way to represent labour market frictions. Simulation exercise indicates that all three extensions are essential in generating a hump-shaped and persistent inflation response to an exogenous energy price shock, and a lack of any of the three fails the replication of inflation dynamics. \\
+\noindent The energy crisis in 2022 saw a sharp surge in natural gas prices, which in turn produced a persistent inflation response in the UK. A standard New Keynesian model with exogenously priced energy as a production input fails to replicate this hump-shaped and persistent response. I propose three extensions to the baseline model to replicate the observed inflation dynamics in the UK: a vertically integrated production network where upstream industry firms use energy and labour to produce intermediate goods while downstream firms use intermediate goods and labour to produce consumption goods; myopia in downstream firms' pricing decisions reflecting the difficulty or reluctance of forecasting future prices of intermediate goods; real wage rigidities as a parsimonious representation of labour market frictions. A simulation exercise indicates that all three extensions are essential in generating a hump-shaped and persistent inflation response to an exogenous energy price shock, and that removing any one of the three prevents the model from replicating the observed inflation dynamics. \\
 \vspace{0in}\\
 \noindent\textbf{Keywords:} New Keynesian model, inflation persistence, production network, real wage rigidity, energy price shock\\
 \vspace{0in}\\
@@ -101,17 +105,6 @@
 The energy crisis in 2022 led to a surge in natural gas prices, which has in turn caused a significant increase in inflation in the UK.
 As Figure \ref{fig:energy_prices_cpi_inflation} shows, whereas the natural gas price shock was transitory, the inflation response was lagged and persistent: the peak of the inflation response occurred a few months later than that of the natural gas price, and the inflation rate remained elevated for a long time after the natural gas price returned to normal.
 
-\begin{figure}[htbp]
-\begin{center}
-  \includegraphics[width=\textwidth]{figure/energy_prices_cpi_inflation.png}
-  \caption{Energy Prices and UK CPI Inflation between September 2018 and March 2025}
-  \label{fig:energy_prices_cpi_inflation}
-\end{center}
-
-\footnotesize
-\textit{Notes:} Solid lines show GBP-denominated natural gas (EU) and Brent crude oil prices indexed to September 2018 = 100 (left axis). Black dashed line shows headline CPI inflation, year-on-year (right axis). Sources: FRED
-\end{figure}
-
 The standard New Keynesian model for a small open economy which imports energy as a factor of production at an exogenous price (hereafter ``the benchmark model''; see Appendix~\ref{sec:appendix-benchmark} for details) fails to replicate this hump-shaped and persistent response of inflation to the energy price shock.
 
 I extend the benchmark model in three following ways to replicate a hump-shaped and persistent inflation response to the energy price shock.
@@ -130,6 +123,17 @@ The related literature is reviewed in the following subsection.
 In Section~\ref{sec:model}, I illustrate the paper's main model and discuss calibration of  the model parameters for simulations.
 In Section~\ref{sec:results_and_discussion}, I present the simulation results after an exogenous shock to the energy price and evaluate them by conducting sensitivity analysis.
 Finally, the paper concludes in Section~\ref{sec:conclusion}.
+
+\begin{figure}[t]
+\begin{center}
+  \includegraphics[width=\textwidth]{figure/energy_prices_cpi_inflation.png}
+  \caption{Energy Prices and UK CPI Inflation between September 2018 and March 2025}
+  \label{fig:energy_prices_cpi_inflation}
+\end{center}
+
+\footnotesize
+\textit{Notes:} Solid lines show GBP-denominated natural gas (EU) and Brent crude oil prices indexed to September 2018 = 100 (left axis). Black dashed line shows headline CPI inflation, year-on-year (right axis). Data source: FRED
+\end{figure}
 
 \subsection{Related Literature}
 Before the 2022 energy price shock, \cite{kanzig2021macroeconomic} presented an empirical evidence that energy price shocks generates a persistent effect on inflation.
@@ -173,8 +177,43 @@ Mathematically, this means $W_tE_t = S_tZ_t$, or equivalently,
 \end{equation}
 
 \subsection{Production Network}
-Apart from the production of tradable goods (which utilises $E_t$ units of labour to produce the same quantity of the tradable goods), the economy entails a production network of domestic consumption goods, which consists of upstream and downstream industries that are vertically structured.
+Apart from the production of tradable goods (which utilises $E_t$ units of labour to produce the same quantity of the tradable goods), the economy entails a production network of domestic consumption goods, which consists of upstream and downstream industries that are vertically structured as illustrated in Figure~\ref{fig:network_diagram}.
 Both industries use domestic labour as an input, which does not require any industry-specific skills, and the workers are completely mobile between the two industries, so that the wage is identical across the two industries in the equilibrium.
+
+\begin{figure}[t]
+\centering
+  \begin{tikzpicture}[
+    node distance=2.4cm,
+    box/.style={
+      draw, rounded corners=4pt,
+      minimum width=2.8cm, minimum height=1.3cm,
+      align=center, font=\normalsize,
+      line width=0.6pt
+    },
+    input/.style={
+      font=\normalsize\itshape
+    },
+    arr/.style={
+      -{Stealth[length=6pt]}, line width=0.8pt
+    },
+    arrlabel/.style={
+      font=\small, midway, above, align=center
+    }
+  ]
+    \node[input] (energy) {Energy};
+    \node[box, right=0.9cm of energy] (upstream) {\textbf{Upstream}\\\textbf{Firms}};
+    \node[box, right=of upstream] (downstream) {\textbf{Downstream}\\\textbf{Firms}};
+    \node[box, right=of downstream] (households) {\textbf{Households}};
+    \node[input, below=0.9cm of $(upstream)!0.5!(downstream)$] (labour) {Labour};
+    \draw[arr] (energy) -- (upstream);
+    \draw[arr] (upstream) -- node[arrlabel] {Intermediate\\Goods} (downstream);
+    \draw[arr] (downstream) -- node[arrlabel] {Final\\Goods} (households);
+    \draw[arr] (labour) -- (upstream);
+    \draw[arr] (labour) -- (downstream);
+  \end{tikzpicture}
+\caption{Structure of the Vertical Production Network}
+\label{fig:network_diagram}
+\end{figure}
 
 In the upstream industry, there is a continuum of firms $j \in [0,1]$ that uses imported energy and domestic labour to produce differentiated intermediate goods, which will be used as inputs by the downstream industry.
 The production of the upstream industry firm $j$ is described by the following Leontief production function:
@@ -446,7 +485,7 @@ At the time of writing, the natural gas prices after its peak in August 2022 exh
 Moreover, in monthly frequency, there is not enough observations of the natural gas prices post-crisis to empirically estimate its process.
 Consequently, I set a conservative value of $\rho = 0.8$, which implies that the size of an exogenous shock to the terms of trade decays half within 3.1 months.
 
-\begin{table}[htbp!]
+\begin{table}[t]
 \centering
 \caption{Model Parameter Values}
 \label{tab:parameters}
@@ -491,7 +530,7 @@ As a quantitative exercise, I simulate the model using the calibrated parameter 
 In period 0, the economy is hit by an exogenous shock that raises the terms of trade $\hat s_t$ by 100\% from the steady state level, which is equivalent to doubling the energy price in domestic currency.
 Figures~\ref{fig:persistence-comparison} and \ref{fig:main-irf} display the model simulation results.\footnote{Although the model period is monthly, the impulse responses of CPI inflation and nominal rate are shown in the annualised values.}
 
-\begin{figure}[htbp]
+\begin{figure}[b!]
 \begin{center}
   \includegraphics[width=\textwidth]{figure/persistence_comparison.png}
   \caption{Inflation Persistence vs Energy Price Shock Decay}
@@ -547,7 +586,7 @@ I conduct sensitivity analysis with varying parameter values for examining the m
 Figure~\ref{fig:sensitivity} shows the resulting persistence of inflation response under different parameter values to be compared with the original.
 Similarly to Figure~\ref{fig:persistence-comparison}, I normalise the main model's inflation response and the terms of trade shock in period 0 to one.
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \begin{center}
   \includegraphics[width=\textwidth]{figure/sensitivity.png}
   \caption{Sensitivity Analysis Results}
@@ -705,7 +744,7 @@ Even though the Input-Output Analytical Tables reveal that those industries prod
 Table \ref{tab:alpha_u} reports the energy cost and gross output of the eight chosen industries between 2017 and 2019, as well as the resulting energy cost shares.
 At the bottom, average energy cost shares across the eight industries are reported, which are weighted by the gross output of each industry.
 
-\begin{table}[htbp]
+\begin{table}[h!]
 \centering
 \begin{threeparttable}
 \caption{Energy Cost Shares of Upstream Industries between 2017 and 2019 (\pounds m)}
@@ -715,7 +754,7 @@ At the bottom, average energy cost shares across the eight industries are report
 \input{alpha_u}
 \begin{tablenotes}[flushleft]
 \footnotesize
-\item \textit{Notes:} Energy and Output columns report the sum of electricity (\texttt{CPA\_D351}) and gas (\texttt{CPA\_D352\_3}) intermediate input costs and gross output, respectively, in millions of pounds. Share is energy cost as a percentage of gross output. Source: ONS Input-Output Analytical Tables \citep{ons2025uk}.
+\item \textit{Notes:} Energy and Output columns report the sum of electricity (\texttt{CPA\_D351}) and gas (\texttt{CPA\_D352\_3}) intermediate input costs and gross output, respectively, in millions of pounds. Share is energy cost as a percentage of gross output. Data source: ONS Input-Output Analytical Tables \citep{ons2025uk}.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -724,20 +763,20 @@ Exact calculations with the identical eight industries are performed for the yea
 It indicates that the energy cost share was somewhat stable until 2020, after which it increased significantly to 46.5\% in 2022.
 I adopt $\alpha^U = 0.375$ which is within the value range between 2017 and 2020 and takes a conservative stance given the post-Covid upward trend for the model calibration.
 
-\begin{figure}[htbp]
+\begin{figure}[h]
 \begin{center}
-  \includegraphics[width=\textwidth]{figure/energy_cost_share.png}
+  \includegraphics[width=0.75\textwidth]{figure/energy_cost_share.png}
   \caption{Energy Cost Share of Upstream Industries}
   \label{fig:energy_cost_share}
 \end{center}
 
 \footnotesize
-\textit{Notes:} Energy cost share is calculated for each year between 2017 and 2022 and shown in black line. The red dashed line represents the adopted value $\alpha^U = 0.375$. Source: ONS Input-Output Analytical Tables \citep{ons2025uk}.
+\textit{Notes:} Energy cost share is calculated for each year between 2017 and 2022 and shown in black line. The red dashed line represents the adopted value $\alpha^U = 0.375$. Data source: ONS Input-Output Analytical Tables \citep{ons2025uk}.
 \end{figure}
 
-
 \section{Appendix: The Benchmark Model}\label{sec:appendix-benchmark}
-This appendix section presents the benchmark small open economy New Keynesian model, on which the paper's main model is extended.\footnote{The development of the benchmark model is due to Kevin Sheedy.}
+This appendix section presents the benchmark small open economy New Keynesian model, on which the paper's main model is extended.
+The development of the benchmark model is due to Kevin Sheedy.
 Compared to the main model, the benchmark model does not have the vertical production network but entails a single industry that inputs imported energy and labour to produce final consumption goods according to their Leontief production function.
 The firms are completely rational and not myopic ($m_f = 1$), and there is no real wage rigidity ($\psi_w = 0$).
 The benchmark model is characterised by the following ten log-linearised equations:
@@ -758,7 +797,9 @@ For calibration, the firms' energy cost share in production $\alpha$ is set to 0
 The Calvo probability $\theta$ is set to 11/12, which I adopted for the downstream industry in the main model as well.
 Other parameters are set to the same values as in the main model as summarised in Table~\ref{tab:benchmark_params}.
 
-\begin{table}[htbp]
+The impulse responses of the benchmark model to an exogenous 100\% shock to the terms of trade are shown in Figure~\ref{fig:benchmark-irf}.
+
+\begin{table}[b!]
 \centering
 \caption{Benchmark Model Parameter Values}
 \label{tab:benchmark_params}
@@ -788,8 +829,6 @@ Terms of trade persistence & $\rho$ & 0.8 \\
 \end{tabular}
 \end{table}
 
-The impulse responses of the benchmark model to an exogenous 100\% shock to the terms of trade are shown in Figure~\ref{fig:benchmark-irf}.
-
 \begin{figure}[htbp]
 \begin{center}
   \includegraphics[width=\textwidth]{figure/benchmark_irf.png}
@@ -812,7 +851,7 @@ CPI inflation and the nominal interest rate are reported in annualised percentag
 % \end{center}
 
 % \footnotesize
-% \textit{Notes:} 
+% \textit{Notes:}
 % \end{figure}
 
 % \begin{figure}[htbp]
@@ -822,7 +861,7 @@ CPI inflation and the nominal interest rate are reported in annualised percentag
 % \end{center}
 
 % \footnotesize
-% \textit{Notes:} 
+% \textit{Notes:}
 % \end{figure}
 
 % \begin{figure}[htbp]
@@ -833,7 +872,7 @@ CPI inflation and the nominal interest rate are reported in annualised percentag
 % \end{center}
 
 % \footnotesize
-% \textit{Notes:} 
+% \textit{Notes:}
 % \end{figure}
 
 % \begin{figure}[htbp]
@@ -844,7 +883,7 @@ CPI inflation and the nominal interest rate are reported in annualised percentag
 % \end{center}
 
 % \footnotesize
-% \textit{Notes:} 
+% \textit{Notes:}
 % \end{figure}
 
 %TC:endignore

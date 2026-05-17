@@ -7,7 +7,7 @@
 //   Downstream (D): upstream goods + labour -> final consumption (Calvo, theta_D)
 //   Households: consume downstream goods only -> CPI = cpi (= cpi_D)
 //
-// Extensions vs. baseline:
+// Extensions vs. benchmark:
 //   1. Two-sector IO linkage: downstream MC depends on upstream price (cpi_U)
 //   2. Myopia (mf): downstream firms discount expected future MC changes
 //   3. Real wage rigidity (psi_w): real wage adjusts gradually

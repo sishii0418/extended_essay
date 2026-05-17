@@ -1,6 +1,6 @@
 ---
 title: "Untitled"
-author: Shunsuke Ishii
+author: ""
 editor:
   render-on-save: false
 format: html

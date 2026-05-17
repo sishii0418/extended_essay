@@ -1,15 +1,4 @@
-# ============================================================
-# Compute GVA-weighted energy cost share for upstream industries
-# using ONS Input-Output Analytical Tables (product by product)
-#
-# Downloads xlsx directly from ONS, reads the IOT sheet,
-# and computes GVA-weighted average energy cost shares.
-#
-# For calibration of the model parameter $\alpha^U = 0.375$.
-#
-# ============================================================
-
-# TODO: IOT exists for pre 2017 but seems to be in a different format.
+# Computes energy cost share
 
 library(tidyverse)
 library(readxl)

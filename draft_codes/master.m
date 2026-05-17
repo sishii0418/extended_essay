@@ -1,5 +1,5 @@
 %% ============================================================
-%% master.m  —  EC424 Essay: Run models & generate Figures 2–3
+%% master.m  —  EC424 Essay: Run models & generate Figures
 %%
 %% Requires:  inflation.mod
 %%            inflation_network_realwage_fix.mod
